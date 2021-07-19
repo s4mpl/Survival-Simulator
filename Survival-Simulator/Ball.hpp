@@ -7,8 +7,10 @@
 class Ball {
     protected:
         const float xMax = 800;
+        const float xMin = 0;
         const float yMax = 600;
-        const float vMax = 2500;
+        const float yMin = 0;
+        const float vMax = 1000;
 
         int id;
 
@@ -41,7 +43,7 @@ class Ball {
             this->id = id;
 
             radius = rand() % 50 + 5;
-            mass = radius * 2;
+            mass = pow(radius, 2);
             pos = { 0, 0 };
             vel = { 0, 0 };
             acc = { 0, 0 };
@@ -63,7 +65,7 @@ class Ball {
             this->id = id;
 
             this->radius = radius;
-            mass = radius * 2;
+            mass = pow(radius, 2);
             pos = { xPos, yPos };
             vel = { xVel, yVel };
             acc = { 0, 0 };
@@ -85,7 +87,7 @@ class Ball {
             this->id = id;
 
             this->radius = radius;
-            mass = radius * 2;
+            mass = pow(radius, 2);
             pos = { xPos, yPos };
             vel = { xVel, yVel };
             acc = { xAcc, yAcc };
@@ -107,7 +109,7 @@ class Ball {
             this->id = id;
 
             this->radius = radius;
-            mass = radius * 2;
+            mass = pow(radius, 2);
             pos = { xPos, yPos };
             vel = { xVel, yVel };
             acc = { xAcc, yAcc };
@@ -129,7 +131,7 @@ class Ball {
             this->id = id;
 
             this->radius = radius;
-            mass = radius * 2;
+            mass = pow(radius, 2);
             pos = { xPos, yPos };
             vel = { xVel, yVel };
             acc = { xAcc, yAcc };
@@ -150,8 +152,8 @@ class Ball {
 
 
         void update(std::set<Ball *> *closeEntities) { // Change to Entity later
-            float overlap, mag, otherMag;
-            sf::Vector2f v1Old, v2Old;
+            float overlap, mag, otherMag, colTime;
+            sf::Vector2f p1Old, p2Old, p1New, p2New, p1Col, p2Col, v1Old, v2Old;
 
             // Get delta time
             lastTime = currTime;
@@ -178,35 +180,112 @@ class Ball {
                 /*s = "Checking for collision... (" + std::to_string(currTime) + ")\n" +
                     "p1: " + std::to_string(pos.x) + ", p2: " + std::to_string((*other)->pos.x) +
                     "\ndistance: " + std::to_string(distance(pos, (*other)->pos));*/
-                // If distance <= combined radii, they are intersecting
-                overlap = radius + (*other)->radius - distance(pos, (*other)->pos);
+
+                // Continuous collision detection
+                p1Old = pos;
+                p2Old = (*other)->pos;
+                p1New = p1Old + vel * dt;
+                p2New = p2Old + vel * dt;
                 v1Old = vel;
                 v2Old = (*other)->vel;
                 mag = magnitude(vel);
                 otherMag = magnitude((*other)->vel);
-                if (overlap >= 0) {
-                    // Use old velocities in both calculations or else it updates one before the other
-                    vel = elasticity * computeCollision(pos, (*other)->pos, v1Old, v2Old, mass, (*other)->mass);
-                    (*other)->vel = (*other)->elasticity * computeCollision((*other)->pos, pos, v2Old, v1Old, (*other)->mass, mass);
-                    if (mag > 3) {
-                        // Update sound of collision relative to current state / mass
-                        ballSound.setVolume(0.01 * mag * mass);
-                        ballSound.play();
-                    }
-                    if (otherMag > 3) {
-                        // Update sound of collision relative to current state / mass
-                        (*other)->ballSound.setVolume(0.01 * otherMag * mass);
-                        (*other)->ballSound.play();
-                    }
-                    //closeEntities->erase(other);
 
-                    // Separate the balls using half the overlap times the direction of old velocity (https://youtu.be/guWIF87CmBg?t=854)
-                    if (v1Old != sf::Vector2f{ 0, 0 }) pos -= unit(v1Old) * (overlap / 2);
-                    if (v2Old != sf::Vector2f{ 0, 0 }) (*other)->pos -= unit(v2Old) * (overlap / 2);
+                for (colTime = 0; colTime <= 1; colTime += 0.01) { // Could be better
+                    // Interpolate positions
+                    p1Col = p1Old + (p1New - p1Old) * colTime;
+                    p2Col = p2Old + (p2New - p2Old) * colTime;
+
+                    // If distance <= combined radii, they are intersecting
+                    overlap = radius + (*other)->radius - distance(p1Col, p2Col);
+
+                    if (overlap > 0) {
+                        // Handle the balls at this timestep
+                        dt *= colTime;
+                        (*other)->dt *= colTime;
+                        pos = p1Col;
+                        (*other)->pos = p2Col;
+
+                        overlap = radius + (*other)->radius - distance(p1Col, p2Col);
+                        if (overlap >= 0) {
+                            // Separate the balls using half the overlap times the direction of old velocity (https://youtu.be/guWIF87CmBg?t=854)
+                            // It's not enough to separate in all cases for some reason (or it is doing the colision on both balls from each ball?), so multiply by some constant for now
+                            if (v1Old != sf::Vector2f{ 0, 0 } && elasticity != 0) pos -= unit(v1Old) * (4 / elasticity * overlap / 2);
+                            if (v2Old != sf::Vector2f{ 0, 0 } && (*other)->elasticity != 0) (*other)->pos -= unit(v2Old) * (4 / (*other)->elasticity * overlap / 2);
+                        }
+
+                        // Use old velocities in both calculations or else it updates one before the other
+                        vel = elasticity * computeCollision(pos, (*other)->pos, v1Old, v2Old, mass, (*other)->mass);
+                        (*other)->vel = (*other)->elasticity * computeCollision((*other)->pos, pos, v2Old, v1Old, (*other)->mass, mass);
+                        if (mag > 3) {
+                            // Update sound of collision relative to current state / mass
+                            ballSound.setVolume(0.01 * mag * mass);
+                            ballSound.play();
+                        }
+                        if (otherMag > 3) {
+                            // Update sound of collision relative to current state / mass
+                            (*other)->ballSound.setVolume(0.01 * otherMag * mass);
+                            (*other)->ballSound.play();
+                        }
+                        //closeEntities->erase(other);
+
+                        break;
+                    }
                 }
             }
 
-            // Update position if not out-of-bounds, else collide with border
+            // Continuous border collision detection
+            p1Old = pos;
+            p1New = p1Old + vel * dt;
+
+            for (colTime = 0; colTime <= 1; colTime += 0.01) { // Could be better
+                // Interpolate positions
+                p1Col = p1Old + (p1New - p1Old) * colTime;
+
+                if (p1Col.x + radius > xMax || p1Col.x - radius < xMin) {
+                    // Handle the balls at this timestep
+                    dt *= colTime;
+                    pos.x = p1Col.x;
+
+                    if (fabs(vel.x) > 5) {
+                        // Update sound of collision relative to current state / mass
+                        ballSound.setVolume(0.01 * magnitude(vel) * mass);
+                        ballSound.play();
+                    }
+
+                    vel.x = -vel.x * elasticity;
+
+                    // Get ball out of edge
+                    if (pos.x + radius > xMax) pos.x = xMax - radius;
+                    if (pos.x - radius < xMin) pos.x = xMin + radius;
+
+                    break;
+                }
+
+                if (p1Col.y + radius > yMax || p1Col.y - radius < yMin) {
+                    // Handle the balls at this timestep
+                    dt *= colTime;
+                    pos.y = p1Col.y;
+
+                    if (fabs(vel.y) > 5) {
+                        // Update sound of collision relative to current state / mass
+                        ballSound.setVolume(0.01 * magnitude(vel) * mass);
+                        ballSound.play();
+                    }
+
+                    vel.y = -vel.y * elasticity;
+
+                    // Get ball out of edge
+                    if (pos.y + radius > yMax) pos.y = yMax - radius;
+                    if (pos.y - radius < yMin) pos.y = yMin + radius;
+
+                    break;
+                }
+            }
+
+            pos += vel * dt;
+
+            /* Update position if not out-of-bounds, else collide with border
             if (!(pos.x + radius + vel.x * dt > xMax || pos.x - radius + vel.x * dt < 0)) pos.x += vel.x * dt;
             else {
                 // Get ball out of edge
@@ -232,7 +311,7 @@ class Ball {
                     ballSound.play();
                 }
                 vel.y = -vel.y * elasticity;
-            }
+            }*/
         }
 
         void draw(sf::RenderWindow &window) {
