@@ -37,9 +37,9 @@ float main() {
     balls.push_back(new Ball(3, 500, 200, 50, 0, 0, gravityAccel, 20, clock, 1, sf::Color::Yellow));
     balls.push_back(new Ball(4, 700, 200, -50, 0, 0, gravityAccel, 20, clock, 1, sf::Color::Green));
     balls.push_back(new Ball(5, 600, 350, 0, 0, 0, gravityAccel, 30, clock, 0.5, sf::Color::Magenta));
-    for (i = 1; i <= 10; i++) {
+    /*for (i = 1; i <= 10; i++) {
         balls.push_back(new Ball(i-1, 45 * ((i % 150) + 1), 45 * ((i / 6) + 1), 45 * ((i % 150) + 1), 45 * ((i / 6) + 1), 0, gravityAccel, 3, clock, 0.4));
-    }
+    }*/
 
     std::set<Ball *> *ballSet;
     for (i = 0; i < balls.size(); i++) {

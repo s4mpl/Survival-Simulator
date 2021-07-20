@@ -33,6 +33,7 @@ class Ball {
         sf::Color color;
 
         std::string s = "not working";
+        bool collided;
 
     public:
         Ball(int id, sf::Clock &clock) {
@@ -154,6 +155,7 @@ class Ball {
         void update(std::set<Ball *> *closeEntities) { // Change to Entity later
             float overlap, mag, otherMag, colTime;
             sf::Vector2f p1Old, p2Old, p1New, p2New, p1Col, p2Col, v1Old, v2Old;
+            collided = false;
 
             // Get delta time
             lastTime = currTime;
@@ -191,7 +193,7 @@ class Ball {
                 mag = magnitude(vel);
                 otherMag = magnitude((*other)->vel);
 
-                for (colTime = 0; colTime <= 1; colTime += 0.01) { // Could be better
+                for (colTime = 0; colTime <= 1; colTime += 0.001) { // Could be better
                     // Interpolate positions
                     p1Col = p1Old + (p1New - p1Old) * colTime;
                     p2Col = p2Old + (p2New - p2Old) * colTime;
@@ -199,7 +201,9 @@ class Ball {
                     // If distance <= combined radii, they are intersecting
                     overlap = radius + (*other)->radius - distance(p1Col, p2Col);
 
-                    if (overlap > 0) {
+                    if (overlap > 0 && !(*other)->collided) {
+                        collided = true;
+
                         // Handle the balls at this timestep
                         dt *= colTime;
                         (*other)->dt *= colTime;
@@ -210,13 +214,13 @@ class Ball {
                         if (overlap >= 0) {
                             // Separate the balls using half the overlap times the direction of old velocity (https://youtu.be/guWIF87CmBg?t=854)
                             // It's not enough to separate in all cases for some reason (or it is doing the colision on both balls from each ball?), so multiply by some constant for now
-                            if (v1Old != sf::Vector2f{ 0, 0 } && elasticity != 0) pos -= unit(v1Old) * (4 / elasticity * overlap / 2);
-                            if (v2Old != sf::Vector2f{ 0, 0 } && (*other)->elasticity != 0) (*other)->pos -= unit(v2Old) * (4 / (*other)->elasticity * overlap / 2);
+                            if (v1Old != sf::Vector2f{ 0, 0 } && elasticity != 0) pos -= unit(v1Old) * (/*4 / elasticity **/ overlap / 2);
+                            if (v2Old != sf::Vector2f{ 0, 0 } && (*other)->elasticity != 0) (*other)->pos -= unit(v2Old) * (/*4 / (*other)->elasticity **/ overlap / 2);
                         }
 
                         // Use old velocities in both calculations or else it updates one before the other
-                        vel = elasticity * computeCollision(pos, (*other)->pos, v1Old, v2Old, mass, (*other)->mass);
-                        (*other)->vel = (*other)->elasticity * computeCollision((*other)->pos, pos, v2Old, v1Old, (*other)->mass, mass);
+                        vel = elasticity * computeCollision(p1Col, p2Col, v1Old, v2Old, mass, (*other)->mass);
+                        (*other)->vel = (*other)->elasticity * computeCollision(p2Col, p1Col, v2Old, v1Old, (*other)->mass, mass);
                         if (mag > 3) {
                             // Update sound of collision relative to current state / mass
                             ballSound.setVolume(0.01 * mag * mass);
@@ -238,7 +242,7 @@ class Ball {
             p1Old = pos;
             p1New = p1Old + vel * dt;
 
-            for (colTime = 0; colTime <= 1; colTime += 0.01) { // Could be better
+            for (colTime = 0; colTime <= 1; colTime += 0.001) { // Could be better
                 // Interpolate positions
                 p1Col = p1Old + (p1New - p1Old) * colTime;
 
