@@ -1,27 +1,11 @@
-﻿  main.cpp
-C:\Users\brandan\source\repos\Survival-Simulator\Survival-Simulator\Ball.hpp(49,34): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-C:\Users\brandan\source\repos\Survival-Simulator\Survival-Simulator\Ball.hpp(199,1): warning C4305: '+=': truncation from 'double' to 'float'
-C:\Users\brandan\source\repos\Survival-Simulator\Survival-Simulator\Ball.hpp(232,64): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\brandan\source\repos\Survival-Simulator\Survival-Simulator\Ball.hpp(237,79): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\brandan\source\repos\Survival-Simulator\Survival-Simulator\Ball.hpp(261,1): warning C4305: '+=': truncation from 'double' to 'float'
-C:\Users\brandan\source\repos\Survival-Simulator\Survival-Simulator\Ball.hpp(272,67): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\brandan\source\repos\Survival-Simulator\Survival-Simulator\Ball.hpp(292,67): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\brandan\source\repos\Survival-Simulator\Survival-Simulator\Ball.hpp(364,48): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\brandan\source\repos\Survival-Simulator\Survival-Simulator\Ball.hpp(366,31): warning C4018: '<': signed/unsigned mismatch
-C:\Users\brandan\source\repos\Survival-Simulator\Survival-Simulator\main.cpp(14,14): warning C4326: return type of 'main' should be 'int' instead of 'float'
-C:\Users\brandan\source\repos\Survival-Simulator\Survival-Simulator\main.cpp(24,54): warning C4244: 'argument': conversion from 'const float' to 'unsigned int', possible loss of data
-C:\Users\brandan\source\repos\Survival-Simulator\Survival-Simulator\main.cpp(24,43): warning C4244: 'argument': conversion from 'const float' to 'unsigned int', possible loss of data
-C:\Users\brandan\source\repos\Survival-Simulator\Survival-Simulator\main.cpp(42,122): warning C4305: 'argument': truncation from 'double' to 'float'
-C:\Users\brandan\source\repos\Survival-Simulator\Survival-Simulator\main.cpp(42,63): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\brandan\source\repos\Survival-Simulator\Survival-Simulator\main.cpp(42,42): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\brandan\source\repos\Survival-Simulator\Survival-Simulator\main.cpp(47,19): warning C4018: '<': signed/unsigned mismatch
-C:\Users\brandan\source\repos\Survival-Simulator\Survival-Simulator\main.cpp(84,27): warning C4018: '<': signed/unsigned mismatch
-C:\Users\brandan\source\repos\Survival-Simulator\Survival-Simulator\main.cpp(85,31): warning C4018: '<': signed/unsigned mismatch
-C:\Users\brandan\source\repos\Survival-Simulator\Survival-Simulator\main.cpp(100,27): warning C4018: '<': signed/unsigned mismatch
-C:\Users\brandan\source\repos\Survival-Simulator\Survival-Simulator\main.cpp(110,27): warning C4018: '<': signed/unsigned mismatch
+﻿  Player.cpp
+C:\Users\brandan\source\repos\Survival-Simulator\Survival-Simulator\Player.cpp(20,11): warning C4101: 'overlap': unreferenced local variable
+C:\Users\brandan\source\repos\Survival-Simulator\Survival-Simulator\Player.cpp(20,35): warning C4101: 'colTime': unreferenced local variable
+C:\Users\brandan\source\repos\Survival-Simulator\Survival-Simulator\Player.cpp(20,25): warning C4101: 'otherMag': unreferenced local variable
+C:\Users\brandan\source\repos\Survival-Simulator\Survival-Simulator\Player.cpp(20,20): warning C4101: 'mag': unreferenced local variable
   Generating code
-  1 of 454 functions ( 0.2%) were compiled, the rest were copied from previous compilation.
+  37 of 464 functions ( 8.0%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
-    0 functions had inline decision re-evaluated but remain unchanged
+    13 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
   Survival-Simulator.vcxproj -> C:\Users\brandan\source\repos\Survival-Simulator\Release\Survival-Simulator.exe

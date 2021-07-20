@@ -150,9 +150,11 @@
     <ClCompile Include="Player.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Ball.hpp" />
+    <ClInclude Include="Ball.h" />
+    <ClCompile Include="Ball.cpp" />
     <ClInclude Include="Player.h" />
-    <ClInclude Include="Utils.hpp" />
+    <ClCompile Include="Utils.cpp" />
+    <ClInclude Include="Utils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

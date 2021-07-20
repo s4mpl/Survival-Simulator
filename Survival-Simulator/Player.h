@@ -2,7 +2,7 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 #include <cstdlib>
-#include "Ball.hpp"
+#include "Ball.h"
 
 class Player : Ball {
 	protected:

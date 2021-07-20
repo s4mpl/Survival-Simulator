@@ -2,8 +2,7 @@
 #include <cmath>
 #include <ctime>
 #include <cstdlib>
-#include <deque>
-#include "Ball.hpp"
+#include "Ball.h"
 
 ////////////////////////////////////////////////////////////
 /// Entry point of application
@@ -30,7 +29,7 @@ float main() {
     //std::deque<Entity> entities;
     std::deque<Ball *> balls; // Use a deque so that the list is not constantly copied around while resizing, losing the ability to play sound or something
     std::map<Ball *, std::set<Ball *> *> closeEntities;
-    std::map<Ball*, std::set<Ball*>*>::iterator it;
+    std::map<Ball *, std::set<Ball *> *>::iterator it;
     //Ball ball = Ball(200, 200, 150, 120, 0, gravityAccel, 20, clock, 1);
     /*balls.push_back(new Ball(0, 200, 200, 150, 120, 0, gravityAccel, 20, clock, 1));
     balls.push_back(new Ball(1, 100, 200, 50, 0, 0, gravityAccel, 50, clock, 0.75, sf::Color::Red));
@@ -45,7 +44,7 @@ float main() {
 
     std::set<Ball *> *ballSet;
     for (i = 0; i < balls.size(); i++) {
-        ballSet = new std::set<Ball*>();
+        ballSet = new std::set<Ball *>();
         closeEntities.insert(make_pair(balls[i], ballSet));
     }
 
