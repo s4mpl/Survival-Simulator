@@ -30,16 +30,18 @@ float main() {
     //std::deque<Entity> entities;
     std::deque<Ball *> balls; // Use a deque so that the list is not constantly copied around while resizing, losing the ability to play sound or something
     std::map<Ball *, std::set<Ball *> *> closeEntities;
+    std::map<Ball*, std::set<Ball*>*>::iterator it;
     //Ball ball = Ball(200, 200, 150, 120, 0, gravityAccel, 20, clock, 1);
-    balls.push_back(new Ball(0, 200, 200, 150, 120, 0, gravityAccel, 20, clock, 1));
+    /*balls.push_back(new Ball(0, 200, 200, 150, 120, 0, gravityAccel, 20, clock, 1));
     balls.push_back(new Ball(1, 100, 200, 50, 0, 0, gravityAccel, 50, clock, 0.75, sf::Color::Red));
     balls.push_back(new Ball(2, 400, 100, -800, 100, 0, gravityAccel, 5, clock, 1.5, sf::Color::Black));
     balls.push_back(new Ball(3, 500, 200, 50, 0, 0, gravityAccel, 20, clock, 1, sf::Color::Yellow));
     balls.push_back(new Ball(4, 700, 200, -50, 0, 0, gravityAccel, 20, clock, 1, sf::Color::Green));
-    balls.push_back(new Ball(5, 600, 350, 0, 0, 0, gravityAccel, 30, clock, 0.5, sf::Color::Magenta));
-    /*for (i = 1; i <= 10; i++) {
-        balls.push_back(new Ball(i-1, 45 * ((i % 150) + 1), 45 * ((i / 6) + 1), 45 * ((i % 150) + 1), 45 * ((i / 6) + 1), 0, gravityAccel, 3, clock, 0.4));
-    }*/
+    balls.push_back(new Ball(5, 600, 350, 0, 0, 0, gravityAccel, 30, clock, 0.5, sf::Color::Magenta));*/
+    for (i = 1; i <= 1; i++) {
+        balls.push_back(new Ball(i-1, 45 * ((i % 20) + 1), 45 * ((i / 6) + 1), /*45 * ((i % 20) + 1), 45 * ((i / 6) + 1)*/200, 200, 0, gravityAccel, 10, clock, 1));
+    }
+    balls.push_back(new Ball(2, 400, 100, -800, 100, 0, gravityAccel, 5, clock, 1.5, sf::Color(235, 205, 50, 100)));
 
     std::set<Ball *> *ballSet;
     for (i = 0; i < balls.size(); i++) {
@@ -88,7 +90,7 @@ float main() {
                          ||
                         (balls[i]->getPosition().x + balls[i]->getRadius() < balls[j]->getPosition().x + balls[j]->getRadius() &&
                          balls[i]->getPosition().x + balls[i]->getRadius() > balls[j]->getPosition().x - balls[j]->getRadius())) {
-                        std::map<Ball *, std::set<Ball *> *>::iterator it = closeEntities.find(balls[i]);
+                        it = closeEntities.find(balls[i]);
                         it->second->insert(balls[j]);
                     }
                 }
@@ -98,7 +100,8 @@ float main() {
             for (i = 0; i < balls.size(); i++) {
                 // Update state
                 //balls[i]->update(ballSet);
-                balls[i]->update(closeEntities.find(balls[i])->second);
+                it = closeEntities.find(balls[i]);
+                balls[i]->update(it->second);
                 info.setString(balls[0]->getInfo());
                 // Render the scene
                 balls[i]->draw(window);
