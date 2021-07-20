@@ -29,21 +29,22 @@ float main() {
     sf::Clock clock;
     //std::deque<Entity> entities;
     std::deque<Ball *> balls; // Use a deque so that the list is not constantly copied around while resizing, losing the ability to play sound or something
-    std::map<Ball, std::set<Ball *> *> closeEntities;
+    std::map<Ball *, std::set<Ball *> *> closeEntities;
     //Ball ball = Ball(200, 200, 150, 120, 0, gravityAccel, 20, clock, 1);
-    /*balls.push_back(new Ball(0, 200, 200, 150, 120, 0, gravityAccel, 20, clock, 1));
+    balls.push_back(new Ball(0, 200, 200, 150, 120, 0, gravityAccel, 20, clock, 1));
     balls.push_back(new Ball(1, 100, 200, 50, 0, 0, gravityAccel, 50, clock, 0.75, sf::Color::Red));
     balls.push_back(new Ball(2, 400, 100, -800, 100, 0, gravityAccel, 5, clock, 1.5, sf::Color::Black));
     balls.push_back(new Ball(3, 500, 200, 50, 0, 0, gravityAccel, 20, clock, 1, sf::Color::Yellow));
     balls.push_back(new Ball(4, 700, 200, -50, 0, 0, gravityAccel, 20, clock, 1, sf::Color::Green));
-    balls.push_back(new Ball(5, 600, 350, 0, 0, 0, gravityAccel, 30, clock, 0.5, sf::Color::Magenta));*/
-    for (i = 1; i <= 200; i++) {
+    balls.push_back(new Ball(5, 600, 350, 0, 0, 0, gravityAccel, 30, clock, 0.5, sf::Color::Magenta));
+    for (i = 1; i <= 10; i++) {
         balls.push_back(new Ball(i-1, 45 * ((i % 150) + 1), 45 * ((i / 6) + 1), 45 * ((i % 150) + 1), 45 * ((i / 6) + 1), 0, gravityAccel, 3, clock, 0.4));
     }
 
-    std::set<Ball *> *ballSet = new std::set<Ball *>();
+    std::set<Ball *> *ballSet;
     for (i = 0; i < balls.size(); i++) {
-        ballSet->insert(balls[i]);
+        ballSet = new std::set<Ball*>();
+        closeEntities.insert(make_pair(balls[i], ballSet));
     }
 
     // Load the text font
@@ -77,32 +78,28 @@ float main() {
             // Clear the window
             window.clear(sf::Color::White);
 
-            /* Optimization to determine close entities for collision-handling (https://youtu.be/eED4bSkYCB8?t=949)
+            // Optimization to determine close entities for collision-handling (https://youtu.be/eED4bSkYCB8?t=949)
             for (i = 0; i < balls.size(); i++) {
                 for (j = 0; j < balls.size(); j++) {
                     if (j == i) continue;
                     // Check "x-range" of each to see if it is within the "x-range" of another
-                    if ((balls[i].getPosition().x - balls[i].getRadius() < balls[j].getPosition().x + balls[j].getRadius() &&
-                         balls[i].getPosition().x - balls[i].getRadius() > balls[j].getPosition().x - balls[j].getRadius())
+                    if ((balls[i]->getPosition().x - balls[i]->getRadius() < balls[j]->getPosition().x + balls[j]->getRadius() &&
+                         balls[i]->getPosition().x - balls[i]->getRadius() > balls[j]->getPosition().x - balls[j]->getRadius())
                          ||
-                        (balls[i].getPosition().x + balls[i].getRadius() < balls[j].getPosition().x + balls[j].getRadius() &&
-                         balls[i].getPosition().x + balls[i].getRadius() > balls[j].getPosition().x - balls[j].getRadius())) {
-                        std::map<Ball, std::set<Ball> *>::iterator it = closeEntities.find(balls[i]);
-                        if (it != closeEntities.end()) {
-                            std::set<Ball> *newSet = new std::set<Ball>();
-                            newSet->insert(balls[j]);
-                            closeEntities.insert(make_pair(balls[i], newSet));
-                        }
+                        (balls[i]->getPosition().x + balls[i]->getRadius() < balls[j]->getPosition().x + balls[j]->getRadius() &&
+                         balls[i]->getPosition().x + balls[i]->getRadius() > balls[j]->getPosition().x - balls[j]->getRadius())) {
+                        std::map<Ball *, std::set<Ball *> *>::iterator it = closeEntities.find(balls[i]);
+                        it->second->insert(balls[j]);
                     }
                 }
-            }*/
+            }
 
             // For every entity...
             for (i = 0; i < balls.size(); i++) {
                 // Update state
-                balls[i]->update(ballSet);
-                //balls[i].update(closeEntities.find(balls[i])->second);
-                info.setString(balls[2]->getInfo());
+                //balls[i]->update(ballSet);
+                balls[i]->update(closeEntities.find(balls[i])->second);
+                info.setString(balls[0]->getInfo());
                 // Render the scene
                 balls[i]->draw(window);
                 window.draw(info);

@@ -351,10 +351,10 @@ class Ball {
         }
 
         std::string getInfo() const {
-            return "pos: (" + std::to_string(pos.x) + ", " + std::to_string(pos.y) + ")\n" +
+            /*return "pos: (" + std::to_string(pos.x) + ", " + std::to_string(pos.y) + ")\n" +
                    "vel: (" + std::to_string(vel.x) + ", " + std::to_string(vel.y) + ")\n" +
-                   "acc: (" + std::to_string(acc.x) + ", " + std::to_string(acc.y) + ")\n";
+                   "acc: (" + std::to_string(acc.x) + ", " + std::to_string(acc.y) + ")\n";*/
             //return s;
-            //return std::to_string(currTime);
+            return std::to_string(currTime);
         }
 };
