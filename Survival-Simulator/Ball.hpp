@@ -11,7 +11,7 @@ class Ball {
         const float xMin = 0;
         const float yMax = 600;
         const float yMin = 0;
-        const float vMax = 10000;
+        const float vMax = 1000;
 
         int id;
 
@@ -34,7 +34,7 @@ class Ball {
         sf::Color color;
 
         std::string s = "not working";
-        bool collided;
+        Ball *collided;
 
         std::deque<sf::CircleShape *> trail;
 
@@ -158,7 +158,7 @@ class Ball {
         void update(std::set<Ball *> *closeEntities) { // Change to Entity later
             float overlap, mag, otherMag, colTime;
             sf::Vector2f p1Old, p2Old, p1New, p2New, p1Col, p2Col, v1Old, v2Old;
-            collided = false;
+            collided = NULL;
 
             // Get delta time
             lastTime = currTime;
@@ -205,9 +205,10 @@ class Ball {
                     overlap = radius + (*other)->radius - distance(p1Col, p2Col);
 
                     if (overlap > 0) {
-                        // Prevent collisions from happening again with this ball before it is updated again
-                        if (!(*other)->collided) {
-                            collided = true;
+                        // Prevent collisions from happening again between these two balls before they are updated again
+                        if ((*other)->collided != this) {
+                            collided = *other;
+                            (*other)->collided = this;
 
                             // Handle the balls at this timestep
                             dt *= colTime;
@@ -224,8 +225,8 @@ class Ball {
                             }
 
                             // Use old velocities in both calculations or else it updates one before the other
-                            vel = elasticity * computeCollision(p1Col, p2Col, v1Old, v2Old, mass, (*other)->mass);
-                            (*other)->vel = (*other)->elasticity * computeCollision(p2Col, p1Col, v2Old, v1Old, (*other)->mass, mass);
+                            vel = elasticity * computeCollision(pos, (*other)->pos, v1Old, v2Old, mass, (*other)->mass);
+                            (*other)->vel = (*other)->elasticity * computeCollision((*other)->pos, pos, v2Old, v1Old, (*other)->mass, mass);
                             if (mag > 7) {
                                 // Update sound of collision relative to current state / mass
                                 ballSound.setVolume(0.01 * mag * mass);
@@ -237,6 +238,15 @@ class Ball {
                                 (*other)->ballSound.play();
                             }
                         }
+
+                        overlap = radius + (*other)->radius - distance(p1Col, p2Col);
+                        if (overlap >= 0) {
+                            // Separate the balls using half the overlap times the direction of old velocity (https://youtu.be/guWIF87CmBg?t=854)
+                            // It's not enough to separate in all cases for some reason (or it is doing the colision on both balls from each ball?), so multiply by some constant for now
+                            if (v1Old != sf::Vector2f{ 0, 0 } && elasticity != 0) pos -= unit(v1Old) * (/*4 / elasticity **/ overlap / 2);
+                            if (v2Old != sf::Vector2f{ 0, 0 } && (*other)->elasticity != 0) (*other)->pos -= unit(v2Old) * (/*4 / (*other)->elasticity **/ overlap / 2);
+                        }
+
                         // If the other ball already handled the collision, still get rid of the pointer from closeEntities
                         closeEntities->erase(other);
                         break;
@@ -296,7 +306,7 @@ class Ball {
             // Add trail to ball
             sf::CircleShape *trailCirc = new sf::CircleShape(radius);
             //trailCirc->setFillColor(sf::Color(235, 205, 50, 100)); // gold color
-            trailCirc->setFillColor(sf::Color(color.r, color.g, color.b, 75));
+            trailCirc->setFillColor(sf::Color(color.r, color.g, color.b, 15));
             trailCirc->setOrigin(radius, radius);
             trailCirc->setPosition(pos);
             if (trail.size() < 20) {
@@ -308,7 +318,7 @@ class Ball {
                 trail.pop_front();
                 delete trailCirc;
             }
-            pos += vel * dt;
+            //pos += vel * dt;
 
             /* Update position if not out-of-bounds, else collide with border
             if (!(pos.x + radius + vel.x * dt > xMax || pos.x - radius + vel.x * dt < 0)) pos.x += vel.x * dt;
@@ -339,6 +349,11 @@ class Ball {
             }*/
         }
 
+        void advance() {
+            pos += vel * dt;
+            collided = NULL;
+        }
+
         void draw(sf::RenderWindow &window) {
             // Draw ball to the window using position vector
             sf::CircleShape circle(radius);
@@ -346,7 +361,7 @@ class Ball {
             circle.setPosition(pos);
             circle.setFillColor(color);
             circle.setOutlineColor(sf::Color::Black);
-            circle.setOutlineThickness(-3);
+            circle.setOutlineThickness(-radius / 6.5);
 
             for (int i = 0; i < trail.size(); i++) {
                 window.draw(*trail[i]);

@@ -21,7 +21,7 @@ sf::Vector2f unit(sf::Vector2f v) {
 	return v / magnitude(v);
 }
 
-// Computes the final velocity of object 1
+// Computes the final velocity of object 1 (https://stackoverflow.com/questions/31620730/2d-elastic-collision-with-sfml)
 sf::Vector2f computeCollision(sf::Vector2f p1, sf::Vector2f p2, sf::Vector2f v1, sf::Vector2f v2, float m1, float m2) {
-	return v1 - ((2 * m2) / (m1 + m2)) * (dot(v1 - v2, p1 - p2) / pow(magnitude(p2 - p1), 2)) * (p1 - p2);
+	return v1 - (((2 * m2) / (m1 + m2)) * (dot(v1 - v2, p1 - p2) / pow(magnitude(p2 - p1), 2)) * (p1 - p2));
 }
