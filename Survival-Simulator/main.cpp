@@ -33,12 +33,12 @@ float main() {
     //Ball ball = Ball(200, 200, 150, 120, 0, gravityAccel, 20, clock, 1);
     /*balls.push_back(new Ball(0, 200, 200, 150, 120, 0, gravityAccel, 20, clock, 1));
     balls.push_back(new Ball(1, 100, 200, 50, 0, 0, gravityAccel, 50, clock, 0.75, sf::Color::Red));
-    balls.push_back(new Ball(2, 400, 100, -800, 100, 0, gravityAccel, 5, clock, 1.1, sf::Color::Black));*/
-    //balls.push_back(new Ball(3, 500, 200, 500, 0, 0, gravityAccel, 20, clock, 1, sf::Color::Yellow));
-    //balls.push_back(new Ball(4, 700, 200, -500, 0, 0, gravityAccel, 20, clock, 1, sf::Color::Green));
-    //balls.push_back(new Ball(5, 600, 350, 0, -200, 0, gravityAccel, 30, clock, 0.7, sf::Color::Magenta));
+    //balls.push_back(new Ball(2, 400, 100, -800, 100, 0, gravityAccel, 5, clock, 1.1, sf::Color::Black));
+    balls.push_back(new Ball(3, 500, 200, 500, 0, 0, gravityAccel, 20, clock, 1, sf::Color::Yellow));
+    balls.push_back(new Ball(4, 700, 200, -500, 0, 0, gravityAccel, 20, clock, 1, sf::Color::Green));
+    balls.push_back(new Ball(5, 600, 350, 0, -200, 0, gravityAccel, 30, clock, 0.7, sf::Color::Magenta));*/
     for (i = 1; i <= 10; i++) {
-        balls.push_back(new Ball(i-1, 45 * ((i % 20) + 1), 45 * ((i / 6) + 1), 200, 200, 0, gravityAccel, 10, clock, 1.1));
+        balls.push_back(new Ball(i-1, 45 * ((i % 20) + 1), 45 * ((i / 6) + 1), 200, 200, 0, gravityAccel, 10, clock, 1));
     }
     //balls.push_back(new Ball(2, 400, 100, -800, 100, 0, gravityAccel, 5, clock, 1.5, sf::Color(235, 205, 50, 100)));
 
@@ -84,11 +84,14 @@ float main() {
                 for (j = 0; j < balls.size(); j++) {
                     if (j == i) continue;
                     // Check "x-range" of each to see if it is within the "x-range" of another
-                    if ((balls[i]->getPosition().x - balls[i]->getRadius() < balls[j]->getPosition().x + balls[j]->getRadius() &&
-                         balls[i]->getPosition().x - balls[i]->getRadius() > balls[j]->getPosition().x - balls[j]->getRadius())
-                         ||
-                        (balls[i]->getPosition().x + balls[i]->getRadius() < balls[j]->getPosition().x + balls[j]->getRadius() &&
-                         balls[i]->getPosition().x + balls[i]->getRadius() > balls[j]->getPosition().x - balls[j]->getRadius())) {
+                    if ((balls[i]->getPosition().x - balls[i]->getRadius() <= balls[j]->getPosition().x + balls[j]->getRadius() + 1 &&
+                         balls[i]->getPosition().x - balls[i]->getRadius() >= balls[j]->getPosition().x - balls[j]->getRadius() - 1)
+                        ||
+                        (balls[i]->getPosition().x + balls[i]->getRadius() <= balls[j]->getPosition().x + balls[j]->getRadius() + 1 &&
+                         balls[i]->getPosition().x + balls[i]->getRadius() >= balls[j]->getPosition().x - balls[j]->getRadius() - 1)
+                        ||
+                        (balls[i]->getPosition().x - balls[i]->getRadius() >= balls[j]->getPosition().x - balls[j]->getRadius() &&
+                         balls[i]->getPosition().x + balls[i]->getRadius() <= balls[j]->getPosition().x + balls[j]->getRadius())) {
                         it = closeEntities.find(balls[i]);
                         it->second->insert(balls[j]);
                     }

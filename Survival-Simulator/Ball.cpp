@@ -165,7 +165,7 @@ void Ball::update(std::set<Ball *> *closeEntities) { // Change to Entity later
         mag = magnitude(vel);
         otherMag = magnitude((*other)->vel);
 
-        for (colTime = 0; colTime <= 1; colTime += 0.001) { // Could be better
+        for (colTime = 0; colTime <= 1; colTime += 0.001f) { // Could be better
             // Interpolate positions
             p1Col = p1Old + (p1New - p1Old) * colTime;
             p2Col = p2Old + (p2New - p2Old) * colTime;
@@ -208,18 +208,21 @@ void Ball::update(std::set<Ball *> *closeEntities) { // Change to Entity later
                     }
                 }
 
-                overlap = radius + (*other)->radius - distance(p1Col, p2Col);
-                if (overlap >= 0) {
-                    // Separate the balls using half the overlap times the direction of old velocity (https://youtu.be/guWIF87CmBg?t=854)
-                    // It's not enough to separate in all cases for some reason (or it is doing the colision on both balls from each ball?), so multiply by some constant for now
-                    if (v1Old != sf::Vector2f{ 0, 0 } && elasticity != 0) pos -= unit(v1Old) * (/*4 / elasticity **/ overlap / 2);
-                    if (v2Old != sf::Vector2f{ 0, 0 } && (*other)->elasticity != 0) (*other)->pos -= unit(v2Old) * (/*4 / (*other)->elasticity **/ overlap / 2);
-                }
-
-                // If the other ball already handled the collision, still get rid of the pointer from closeEntities
-                closeEntities->erase(other);
                 break;
             }
+        }
+
+        // If still inside each other, separate them more and check again next frame
+        overlap = radius + (*other)->radius - distance(p1Col, p2Col);
+        if (overlap > 0) {
+            // Separate the balls using half the overlap times the direction of old velocity (https://youtu.be/guWIF87CmBg?t=854)
+            // It's not enough to separate in all cases for some reason (or it is doing the colision on both balls from each ball?), so multiply by some constant for now
+            if (v1Old != sf::Vector2f{ 0, 0 } && elasticity != 0) pos -= unit(v1Old) * (/*4 / elasticity **/ overlap / 2);
+            if (v2Old != sf::Vector2f{ 0, 0 } && (*other)->elasticity != 0) (*other)->pos -= unit(v2Old) * (/*4 / (*other)->elasticity **/ overlap / 2);
+        }
+        else {
+            // If the other ball already handled the collision, still get rid of its pointer from closeEntities
+            closeEntities->erase(other); // Should make closeEntities a member variable and remove "collided"
         }
     }
 
@@ -227,7 +230,7 @@ void Ball::update(std::set<Ball *> *closeEntities) { // Change to Entity later
     p1Old = pos;
     p1New = p1Old + vel * dt;
 
-    for (colTime = 0; colTime <= 1; colTime += 0.001) { // Could be better
+    for (colTime = 0; colTime <= 1; colTime += 0.001f) { // Could be better
         // Interpolate positions
         p1Col = p1Old + (p1New - p1Old) * colTime;
 
@@ -275,8 +278,8 @@ void Ball::update(std::set<Ball *> *closeEntities) { // Change to Entity later
     // Add trail to ball
     sf::CircleShape *trailCirc = new sf::CircleShape(radius);
     //trailCirc->setFillColor(sf::Color(235, 205, 50, 100)); // gold color
-    trailCirc->setFillColor(sf::Color(color.r, color.g, color.b, 15));
-    trailCirc->setOrigin(radius, radius);
+    trailCirc->setFillColor(sf::Color(color.r, color.g, color.b, 25));
+    //trailCirc->setOrigin(radius, radius);
     trailCirc->setPosition(pos);
     if (trail.size() < 20) {
         trail.push_back(trailCirc);
@@ -332,7 +335,11 @@ void Ball::draw(sf::RenderWindow &window) {
     circle.setOutlineColor(sf::Color::Black);
     circle.setOutlineThickness(-radius / 6.5);
 
+    float trailR;
     for (int i = 0; i < trail.size(); i++) {
+        trailR = log2(i) * radius / 3 > radius ? radius : log2(i) * radius / 4;
+        trail[i]->setRadius(trailR); // tail gets smaller at the end
+        trail[i]->setOrigin(trailR, trailR);
         window.draw(*trail[i]);
     }
 
