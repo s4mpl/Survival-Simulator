@@ -43,6 +43,7 @@ void Player::update(std::set<Ball *> *closeEntities) {
     attackTime += dt;
     reloadTime += dt;
     if (!reloading) reloadTime = 0; // for the reload bar
+    if (attackTime > attackSpeed) attackTime = attackSpeed; // for the attack bar
 
     if (reloading && reloadTime >= reloadSpeed) {
         totalAmmo -= maxAmmo - ammo;
@@ -139,12 +140,12 @@ void Player::draw(sf::RenderWindow &window) {
         pistol.setRotation(rotationAngle);
         pistol.setFillColor(sf::Color(45, 45, 45, 255));
         window.draw(pistol);
-        barrelPos = { pos + sf::Vector2f{ -radius + 24, -8 } };
+        barrelPos = { pos + sf::Vector2f{ unit(relativePos).x * (radius + 16), unit(relativePos).y * (radius + 16) }
+                      - sf::Vector2f{ (float)cos((rotationAngle - 90) * M_PI / 180) * 11, (float)sin((rotationAngle - 90) * M_PI / 180) * 11 } }; // perpendicular vector
     }
 
     // Reloading bar / reloading progress
     sf::RectangleShape rb({ 102, 4 });
-    //rb.setOrigin({ 26, 2 });
     rb.setPosition(5, 65);
     rb.setOutlineColor(sf::Color::Black);
     rb.setOutlineThickness(-1);
@@ -153,13 +154,29 @@ void Player::draw(sf::RenderWindow &window) {
     rp.setFillColor(sf::Color::Black);
 
     sf::Font font;
-    if (!font.loadFromFile("resources/sansation.ttf")) exit(-1);
+    if (!font.loadFromFile("resources/UbuntuMono-Regular.ttf")) exit(-1);
     sf::Text rt;
     rt.setFont(font);
-    rt.setCharacterSize(12);
+    rt.setCharacterSize(14);
     rt.setFillColor(sf::Color::Black);
     rt.setString(std::to_string(reloadTime));
     rt.setPosition(5, 70);
+
+    // Attack speed bar
+    sf::RectangleShape ab({ 102, 4 });
+    ab.setPosition(5, 90);
+    ab.setOutlineColor(sf::Color::Black);
+    ab.setOutlineThickness(-1);
+    sf::RectangleShape ap({ 100 * attackTime / attackSpeed, 2 });
+    ap.setPosition(6, 91);
+    ap.setFillColor(sf::Color(150, 0, 0, 255));
+
+    sf::Text at;
+    at.setFont(font);
+    at.setCharacterSize(14);
+    at.setFillColor(sf::Color(150, 0, 0, 255));
+    at.setString(std::to_string(attackTime));
+    at.setPosition(5, 95);
 
 
     window.draw(circle);
@@ -168,6 +185,16 @@ void Player::draw(sf::RenderWindow &window) {
     window.draw(rb);
     window.draw(rp);
     window.draw(rt);
+    window.draw(ab);
+    window.draw(ap);
+    window.draw(at);
+
+    /* Draw barrel position for testing
+    sf::CircleShape bp(2);
+    bp.setFillColor(sf::Color::Black);
+    bp.setOrigin(2, 2);
+    bp.setPosition(barrelPos);
+    window.draw(bp);*/
 }
 
 std::string Player::getInfo() const {

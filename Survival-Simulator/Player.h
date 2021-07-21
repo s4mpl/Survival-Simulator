@@ -13,7 +13,7 @@ class Player : public Ball {
         int maxAmmo;
         int totalAmmo;
         float rotationAngle;
-        sf::Vector2f relativePos; // position relative to the mouse
+        sf::Vector2f relativePos; // player position relative to the mouse
         
         sf::Texture texture;
 

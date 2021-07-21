@@ -44,10 +44,10 @@ int main() {
     balls.push_back(new Ball(3, 500, 200, 500, 0, 0, gravityAccel, 20, clock, 1, sf::Color::Yellow));
     balls.push_back(new Ball(4, 700, 200, -500, 0, 0, gravityAccel, 20, clock, 1, sf::Color::Green));
     balls.push_back(new Ball(5, 600, 350, 0, -200, 0, gravityAccel, 30, clock, 0.7, sf::Color::Magenta));*/
-    for (i = 1; i <= 10; i++) {
+    /*for (i = 1; i <= 10; i++) {
         balls.push_back(new Ball(i-1, 45 * ((i % 20) + 1), 45 * ((i / 6) + 1), 200, 200, 0, gravityAccel, 10, clock, 1));
         GLOBAL_ID_COUNT++;
-    }
+    }*/
     //balls.push_back(new Ball(2, 400, 100, -800, 100, 0, gravityAccel, 5, clock, 1.5, sf::Color(235, 205, 50, 100)));
 
     Player *player = new Player(-1, clock);
@@ -144,14 +144,15 @@ int main() {
                 //balls[i]->update(ballSet);
                 mit = closeEntities.find(*it);
                 (*it)->update(mit->second);
-                info.setString(player->getInfo());
                 // Render the scene
                 (*it)->draw(window);
-                window.draw(info);
             }
             for (it = balls.begin(); it != balls.end(); it++) {
                 (*it)->advance();
             }
+
+            info.setString(player->getInfo());
+            window.draw(info);
 
             // Display on screen
             window.display();
