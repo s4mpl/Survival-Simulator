@@ -40,14 +40,14 @@ class Ball {
 
         bool operator<(const Ball& other) const;
 
-        void update(std::set<Ball *> *closeEntities);
+        virtual void update(std::set<Ball *> *closeEntities);
         void advance();
-        void draw(sf::RenderWindow& window);
+        virtual void draw(sf::RenderWindow& window);
 
         sf::Vector2f getPosition() const;
         sf::Vector2f getVelocity() const;
         sf::Vector2f getAcceleration() const;
         float getRadius() const;
         int getId() const;
-        std::string getInfo() const;
+        virtual std::string getInfo() const;
 };

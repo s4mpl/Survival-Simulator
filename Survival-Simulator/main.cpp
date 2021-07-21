@@ -3,6 +3,7 @@
 #include <ctime>
 #include <cstdlib>
 #include "Ball.h"
+#include "Player.h"
 
 ////////////////////////////////////////////////////////////
 /// Entry point of application
@@ -42,6 +43,9 @@ float main() {
     }
     //balls.push_back(new Ball(2, 400, 100, -800, 100, 0, gravityAccel, 5, clock, 1.5, sf::Color(235, 205, 50, 100)));
 
+    Player *player = new Player(-1, clock);
+    balls.push_back(player);
+
     std::set<Ball *> *ballSet;
     for (i = 0; i < balls.size(); i++) {
         ballSet = new std::set<Ball *>();
@@ -63,21 +67,35 @@ float main() {
         // Handle events
         sf::Event event;
         while (window.pollEvent(event)) {
-            // Window closed or escape key pressed: exit
-            if ((event.type == sf::Event::Closed) ||
-               ((event.type == sf::Event::KeyPressed) && (event.key.code == sf::Keyboard::Escape))) {
+            // Window closed -> exit
+            if (event.type == sf::Event::Closed) {
                 window.close();
                 break;
             }
-            // Pause on click
-            if (event.type == sf::Event::MouseButtonPressed) {
+            // Pause on escape key
+            if ((event.type == sf::Event::KeyPressed) && (event.key.code == sf::Keyboard::Escape)) {
                 paused = !paused;
+                player->damagePlayer(-100);
             }
         }
 
         if (!paused) {
             // Clear the window
             window.clear(sf::Color::White);
+
+            // Player input
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
+                player->addVelocity({ 0, -50 });
+            }
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
+                player->addVelocity({ 0, 50 });
+            }
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+                player->addVelocity({ 50, 0 });
+            }
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
+                player->addVelocity({ -50, 0 });
+            }
 
             // Optimization to determine close entities for collision-handling (https://youtu.be/eED4bSkYCB8?t=949)
             for (i = 0; i < balls.size(); i++) {
@@ -104,7 +122,7 @@ float main() {
                 //balls[i]->update(ballSet);
                 it = closeEntities.find(balls[i]);
                 balls[i]->update(it->second);
-                info.setString(balls[0]->getInfo());
+                info.setString(player->getInfo());
                 // Render the scene
                 balls[i]->draw(window);
                 window.draw(info);

@@ -4,7 +4,7 @@
 #include <cstdlib>
 #include "Ball.h"
 
-class Player : Ball {
+class Player : public Ball {
 	protected:
         float health;
         float maxHealth;
@@ -14,6 +14,10 @@ class Player : Ball {
 
 	public:
         Player(int id, sf::Clock& clock);
-        void update(std::set<Ball *> *closeEntities);
-        void draw(sf::RenderWindow &window);
+        void update(std::set<Ball *> *closeEntities) final;
+        void draw(sf::RenderWindow &window) final;
+        std::string getInfo() const final;
+        void setVelocity(sf::Vector2f v);
+        void addVelocity(sf::Vector2f v);
+        void damagePlayer(float amount);
 };

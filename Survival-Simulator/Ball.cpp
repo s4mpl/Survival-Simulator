@@ -1,5 +1,7 @@
 #include "Ball.h"
+#include "Player.h"
 #include "Utils.h"
+#include <typeinfo>
 
 const float xMax = 800;
 const float xMin = 0;
@@ -202,9 +204,15 @@ void Ball::update(std::set<Ball *> *closeEntities) { // Change to Entity later
                         ballSound.play();
                     }
                     if (otherMag > 7) {
-                        // Update sound of collision relative to current state / mass
-                        (*other)->ballSound.setVolume(0.01 * otherMag * mass);
-                        (*other)->ballSound.play();
+                        if ((*other)->id != -1) {
+                            // Update sound of collision relative to current state / mass
+                            (*other)->ballSound.setVolume(0.01 * otherMag * mass);
+                            (*other)->ballSound.play();
+                        }
+                    }
+                    if ((*other)->id == -1) {
+                        // Health lost is proportional to how hard the collision was (force against the player)
+                        ((Player*)(*other))->damagePlayer(magnitude((*other)->vel) / 10);
                     }
                 }
 
@@ -290,6 +298,7 @@ void Ball::update(std::set<Ball *> *closeEntities) { // Change to Entity later
         trail.pop_front();
         delete trailCirc;
     }
+
     //pos += vel * dt;
 
     /* Update position if not out-of-bounds, else collide with border
