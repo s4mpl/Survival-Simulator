@@ -17,17 +17,17 @@ Player::Player(int id, sf::Clock& clock) : Ball{ id, clock } {
     health = maxHealth = 100;
     radius = 15;
     mass = pow(radius, 2);
-    ammo = 5;
-    maxAmmo = 5;
-    totalAmmo = 100;
+    ammo = 7;
+    maxAmmo = 7;
+    totalAmmo = 98;
     weapon = '0';
-    attackSpeed = 1.0f;
+    attackSpeed = 0.75f;
     attackTime = currTime;
     reloadSpeed = 2.5f;
     reloadTime = currTime;
     reloading = false;
 
-    if (!texture.loadFromFile("resources/texture-test1.png")) exit(-1);
+    if (!texture.loadFromFile("resources/eyes.png")) exit(-1);
 }
 
 void Player::update(std::set<Ball *> *closeEntities) {
@@ -229,7 +229,7 @@ void Player::shoot(std::list<Ball *> *e) {
     if (attackTime >= attackSpeed && ammo > 0 && !reloading) {
         switch (weapon) {
             case '0':
-                e->push_back(new Ball(GLOBAL_ID_COUNT, barrelPos.x, barrelPos.y, unit(relativePos).x * 500, unit(relativePos).y * 500, 0, 0, 2.5, this->c, 1, sf::Color(235, 205, 50, 255))); // change to new Bullet(Vector2f spawnPos, Vector2f targetPos)
+                e->push_back(new Ball(GLOBAL_ID_COUNT, barrelPos.x, barrelPos.y, unit(relativePos).x * 500, unit(relativePos).y * 500, 0, 0, 2.5, this->c, 0, sf::Color(235, 205, 50, 255))); // change to new Bullet(Vector2f spawnPos, Vector2f targetPos)
                 GLOBAL_ID_COUNT++;
                 break;
             case '1':

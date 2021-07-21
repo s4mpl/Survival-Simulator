@@ -88,7 +88,7 @@ int main() {
 
         if (!paused) {
             // Clear the window
-            window.clear(sf::Color::White);
+            window.clear(sf::Color(175, 175, 175, 100));
 
             // Player movement
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
