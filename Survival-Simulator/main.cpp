@@ -5,6 +5,8 @@
 #include "Ball.h"
 #include "Player.h"
 
+int GLOBAL_ID_COUNT = 0;
+
 ////////////////////////////////////////////////////////////
 /// Entry point of application
 ///
@@ -24,6 +26,8 @@ float main() {
     sf::RenderWindow window(sf::VideoMode(gameWidth, gameHeight, 32), "Physics Test",
                             sf::Style::Titlebar | sf::Style::Close);
     window.setVerticalSyncEnabled(true);
+    sf::Cursor cursor;
+    if (cursor.loadFromSystem(sf::Cursor::Cross)) window.setMouseCursor(cursor);
 
     // Create the clock and entities
     sf::Clock clock;
@@ -40,6 +44,7 @@ float main() {
     balls.push_back(new Ball(5, 600, 350, 0, -200, 0, gravityAccel, 30, clock, 0.7, sf::Color::Magenta));*/
     for (i = 1; i <= 10; i++) {
         balls.push_back(new Ball(i-1, 45 * ((i % 20) + 1), 45 * ((i / 6) + 1), 200, 200, 0, gravityAccel, 10, clock, 1));
+        GLOBAL_ID_COUNT++;
     }
     //balls.push_back(new Ball(2, 400, 100, -800, 100, 0, gravityAccel, 5, clock, 1.5, sf::Color(235, 205, 50, 100)));
 
@@ -83,7 +88,7 @@ float main() {
             // Clear the window
             window.clear(sf::Color::White);
 
-            // Player input
+            // Player movement
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
                 player->addVelocity({ 0, -50 });
             }
@@ -96,6 +101,16 @@ float main() {
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
                 player->addVelocity({ -50, 0 });
             }
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::R)) {
+                player->reload();
+            }
+            // Shoot on left click
+            if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+                player->shoot(&balls);
+            }
+
+            sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+            player->rotateTo(mousePos);
 
             // Optimization to determine close entities for collision-handling (https://youtu.be/eED4bSkYCB8?t=949)
             for (i = 0; i < balls.size(); i++) {

@@ -1,15 +1,31 @@
 ﻿  Ball.cpp
 C:\Users\brandan\source\repos\Survival-Simulator\Survival-Simulator\Ball.cpp(20,26): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-C:\Users\brandan\source\repos\Survival-Simulator\Survival-Simulator\Ball.cpp(203,56): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\brandan\source\repos\Survival-Simulator\Survival-Simulator\Ball.cpp(209,75): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\brandan\source\repos\Survival-Simulator\Survival-Simulator\Ball.cpp(252,59): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\brandan\source\repos\Survival-Simulator\Survival-Simulator\Ball.cpp(272,59): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\brandan\source\repos\Survival-Simulator\Survival-Simulator\Ball.cpp(345,40): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\brandan\source\repos\Survival-Simulator\Survival-Simulator\Ball.cpp(348,23): warning C4018: '<': signed/unsigned mismatch
-C:\Users\brandan\source\repos\Survival-Simulator\Survival-Simulator\Ball.cpp(349,39): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\brandan\source\repos\Survival-Simulator\Survival-Simulator\Ball.cpp(207,56): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\brandan\source\repos\Survival-Simulator\Survival-Simulator\Ball.cpp(213,75): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\brandan\source\repos\Survival-Simulator\Survival-Simulator\Ball.cpp(256,59): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\brandan\source\repos\Survival-Simulator\Survival-Simulator\Ball.cpp(276,59): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\brandan\source\repos\Survival-Simulator\Survival-Simulator\Ball.cpp(349,40): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\brandan\source\repos\Survival-Simulator\Survival-Simulator\Ball.cpp(352,23): warning C4018: '<': signed/unsigned mismatch
+C:\Users\brandan\source\repos\Survival-Simulator\Survival-Simulator\Ball.cpp(353,39): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+  Player.cpp
+C:\Users\brandan\source\repos\Survival-Simulator\Survival-Simulator\Player.cpp(31,11): warning C4101: 'overlap': unreferenced local variable
+C:\Users\brandan\source\repos\Survival-Simulator\Survival-Simulator\Player.cpp(31,25): warning C4101: 'otherMag': unreferenced local variable
+C:\Users\brandan\source\repos\Survival-Simulator\Survival-Simulator\Player.cpp(31,20): warning C4101: 'mag': unreferenced local variable
+C:\Users\brandan\source\repos\Survival-Simulator\Survival-Simulator\Player.cpp(162,63): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+  main.cpp
+C:\Users\brandan\source\repos\Survival-Simulator\Survival-Simulator\main.cpp(16,14): warning C4326: return type of 'main' should be 'int' instead of 'float'
+C:\Users\brandan\source\repos\Survival-Simulator\Survival-Simulator\main.cpp(26,54): warning C4244: 'argument': conversion from 'const float' to 'unsigned int', possible loss of data
+C:\Users\brandan\source\repos\Survival-Simulator\Survival-Simulator\main.cpp(26,43): warning C4244: 'argument': conversion from 'const float' to 'unsigned int', possible loss of data
+C:\Users\brandan\source\repos\Survival-Simulator\Survival-Simulator\main.cpp(46,63): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\brandan\source\repos\Survival-Simulator\Survival-Simulator\main.cpp(46,42): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\brandan\source\repos\Survival-Simulator\Survival-Simulator\main.cpp(55,19): warning C4018: '<': signed/unsigned mismatch
+C:\Users\brandan\source\repos\Survival-Simulator\Survival-Simulator\main.cpp(116,27): warning C4018: '<': signed/unsigned mismatch
+C:\Users\brandan\source\repos\Survival-Simulator\Survival-Simulator\main.cpp(117,31): warning C4018: '<': signed/unsigned mismatch
+C:\Users\brandan\source\repos\Survival-Simulator\Survival-Simulator\main.cpp(135,27): warning C4018: '<': signed/unsigned mismatch
+C:\Users\brandan\source\repos\Survival-Simulator\Survival-Simulator\main.cpp(145,27): warning C4018: '<': signed/unsigned mismatch
   Generating code
-  1 of 498 functions ( 0.2%) were compiled, the rest were copied from previous compilation.
-    0 functions were new in current compilation
-    0 functions had inline decision re-evaluated but remain unchanged
+  14 of 505 functions ( 2.8%) were compiled, the rest were copied from previous compilation.
+    1 functions were new in current compilation
+    12 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
   Survival-Simulator.vcxproj -> C:\Users\brandan\source\repos\Survival-Simulator\Release\Survival-Simulator.exe

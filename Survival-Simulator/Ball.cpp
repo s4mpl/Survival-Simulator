@@ -128,7 +128,7 @@ bool Ball::operator<(const Ball &other) const {
 
 void Ball::update(std::set<Ball *> *closeEntities) { // Change to Entity later
     float overlap, mag, otherMag, colTime;
-    sf::Vector2f p1Old, p2Old, p1New, p2New, p1Col, p2Col, v1Old, v2Old;
+    sf::Vector2f p1Old, p2Old, p1New, p2New, p1Col, p2Col, v1Old, v2Old, v1New, v2New;
     collided = NULL;
 
     // Get delta time
@@ -196,8 +196,12 @@ void Ball::update(std::set<Ball *> *closeEntities) { // Change to Entity later
                     }
 
                     // Use old velocities in both calculations or else it updates one before the other
-                    vel = elasticity * computeCollision(pos, (*other)->pos, v1Old, v2Old, mass, (*other)->mass);
-                    (*other)->vel = (*other)->elasticity * computeCollision((*other)->pos, pos, v2Old, v1Old, (*other)->mass, mass);
+                    v1New = elasticity * computeCollision(pos, (*other)->pos, v1Old, v2Old, mass, (*other)->mass);
+                    v2New = (*other)->elasticity * computeCollision((*other)->pos, pos, v2Old, v1Old, (*other)->mass, mass);
+
+                    vel = v1New;
+                    (*other)->vel = v2New;
+                    
                     if (mag > 7) {
                         // Update sound of collision relative to current state / mass
                         ballSound.setVolume(0.01 * mag * mass);
