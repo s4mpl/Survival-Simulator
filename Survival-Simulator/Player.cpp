@@ -220,7 +220,7 @@ void Player::damagePlayer(float amount) {
 
 void Player::rotateTo(sf::Vector2i pos) {
     relativePos = { (float)pos.x - this->pos.x, (float)pos.y - this->pos.y };
-    rotationAngle = atan(relativePos.y / relativePos.x) * 180 / M_PI;
+    if (relativePos.x != 0) rotationAngle = atan(relativePos.y / relativePos.x) * 180 / M_PI;
     if (relativePos.x < 0) rotationAngle += 180; // arctan only defined from -pi/2 to pi/2
 }
 
@@ -229,7 +229,7 @@ void Player::shoot(std::list<Ball *> *e) {
     if (attackTime >= attackSpeed && ammo > 0 && !reloading) {
         switch (weapon) {
             case '0':
-                e->push_back(new Ball(GLOBAL_ID_COUNT, barrelPos.x, barrelPos.y, unit(relativePos).x * 500, unit(relativePos).y * 500, 0, 0, 5, this->c, 1, sf::Color(235, 205, 50, 255))); // change to new Bullet(Vector2f spawnPos, Vector2f targetPos)
+                e->push_back(new Ball(GLOBAL_ID_COUNT, barrelPos.x, barrelPos.y, unit(relativePos).x * 500, unit(relativePos).y * 500, 0, 0, 2.5, this->c, 1, sf::Color(235, 205, 50, 255))); // change to new Bullet(Vector2f spawnPos, Vector2f targetPos)
                 GLOBAL_ID_COUNT++;
                 break;
             case '1':

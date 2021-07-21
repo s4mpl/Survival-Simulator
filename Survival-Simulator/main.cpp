@@ -116,6 +116,12 @@ int main() {
 
             // Optimization to determine close entities for collision-handling (https://youtu.be/eED4bSkYCB8?t=949)
             for (it = balls.begin(); it != balls.end(); it++) {
+                // Ensure every entity is in the map -- source of crashes for bullets that did not overlap with the player's 'x' value or another bullet upon spawning
+                mit = closeEntities.find((*it));
+                if (mit == closeEntities.end()) {
+                    ballSet = new std::set<Ball*>();
+                    closeEntities.insert(make_pair((*it), ballSet));
+                }
                 for (it2 = balls.begin(); it2 != balls.end(); it2++) {
                     if ((*it) == (*it2)) continue;
                     // Check "x-range" of each to see if it is within the "x-range" of another
@@ -128,12 +134,7 @@ int main() {
                         ((*it)->getPosition().x - (*it)->getRadius() >= (*it2)->getPosition().x - (*it2)->getRadius() &&
                          (*it)->getPosition().x + (*it)->getRadius() <= (*it2)->getPosition().x + (*it2)->getRadius())) {
                         mit = closeEntities.find((*it));
-                        if (mit == closeEntities.end()) {
-                            ballSet = new std::set<Ball*>();
-                            ballSet->insert((*it2));
-                            closeEntities.insert(make_pair((*it), ballSet));
-                        }
-                        else mit->second->insert((*it2));
+                        mit->second->insert((*it2));
                     }
                 }
             }
@@ -141,7 +142,6 @@ int main() {
             // For every entity...
             for (it = balls.begin(); it != balls.end(); it++) {
                 // Update state
-                //balls[i]->update(ballSet);
                 mit = closeEntities.find(*it);
                 (*it)->update(mit->second);
                 // Render the scene
