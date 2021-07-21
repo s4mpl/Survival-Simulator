@@ -2,6 +2,7 @@
 #include "Player.h"
 #include "Utils.h"
 #include <math.h>
+#include <list>
 
 const float xMax = 800;
 const float xMin = 0;
@@ -139,7 +140,7 @@ void Player::draw(sf::RenderWindow &window) {
 std::string Player::getInfo() const {
     return "FPS: " + std::to_string((int)(1 / dt)) +
            //"\nVelocity: " + std::to_string((int)vel.x) + ", " + std::to_string((int)vel.y) +
-           "\nRotation: " + std::to_string(rotationAngle) +
+           //"\nRotation: " + std::to_string(rotationAngle) +
            "\nHealth: " + std::to_string((int)health) + "/" + std::to_string((int)maxHealth) +
            "\nPistol: " + std::to_string(ammo) + "/" + std::to_string(maxAmmo) + " (" + std::to_string(totalAmmo - ammo) + ")";
 }
@@ -164,7 +165,7 @@ void Player::rotateTo(sf::Vector2i pos) {
 }
 
 // Add new bullets to the entity list
-void Player::shoot(std::deque<Ball *> *e) {
+void Player::shoot(std::list<Ball *> *e) {
     if (attackTime >= attackSpeed && ammo > 0) {
         switch (weapon) {
             case '0':
@@ -179,7 +180,7 @@ void Player::shoot(std::deque<Ball *> *e) {
         }
         attackTime = 0;
         ammo--;
-        if (ammo == 0) reload();
+        if (ammo < 1) reload();
     }
 }
 

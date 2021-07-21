@@ -2,7 +2,7 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 #include <cstdlib>
-#include <deque>
+#include <list>
 #include "Ball.h"
 
 class Player : public Ball {
@@ -33,6 +33,6 @@ class Player : public Ball {
         void addVelocity(sf::Vector2f v);
         void damagePlayer(float amount);
         void rotateTo(sf::Vector2i pos);
-        void shoot(std::deque<Ball *> *e);
+        void shoot(std::list<Ball *> *e);
         void reload();
 };
