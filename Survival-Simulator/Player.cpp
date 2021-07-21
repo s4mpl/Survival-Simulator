@@ -1,6 +1,7 @@
 #define _USE_MATH_DEFINES
 #include "Player.h"
 #include "Utils.h"
+#include "Bullet.h"
 #include <math.h>
 #include <list>
 
@@ -24,6 +25,7 @@ Player::Player(int id, sf::Clock& clock) : Ball{ id, clock } {
     attackTime = currTime;
     reloadSpeed = 2.5f;
     reloadTime = currTime;
+    reloading = false;
 
     if (!texture.loadFromFile("resources/texture-test1.png")) exit(-1);
 }
@@ -40,6 +42,14 @@ void Player::update(std::set<Ball *> *closeEntities) {
 
     attackTime += dt;
     reloadTime += dt;
+    if (!reloading) reloadTime = 0; // for the reload bar
+
+    if (reloading && reloadTime >= reloadSpeed) {
+        totalAmmo -= maxAmmo - ammo;
+        ammo = maxAmmo;
+        reloadTime = 0;
+        reloading = false;
+    }
 
     // Update velocity
     vel.x += acc.x * dt;
@@ -129,12 +139,35 @@ void Player::draw(sf::RenderWindow &window) {
         pistol.setRotation(rotationAngle);
         pistol.setFillColor(sf::Color(45, 45, 45, 255));
         window.draw(pistol);
-        barrelPos = { pos - sf::Vector2f{ -radius + 4 + 20, -8 } };
+        barrelPos = { pos + sf::Vector2f{ -radius + 24, -8 } };
     }
+
+    // Reloading bar / reloading progress
+    sf::RectangleShape rb({ 102, 4 });
+    //rb.setOrigin({ 26, 2 });
+    rb.setPosition(5, 65);
+    rb.setOutlineColor(sf::Color::Black);
+    rb.setOutlineThickness(-1);
+    sf::RectangleShape rp({ 100 * reloadTime / reloadSpeed, 2 });
+    rp.setPosition(6, 66);
+    rp.setFillColor(sf::Color::Black);
+
+    sf::Font font;
+    if (!font.loadFromFile("resources/sansation.ttf")) exit(-1);
+    sf::Text rt;
+    rt.setFont(font);
+    rt.setCharacterSize(12);
+    rt.setFillColor(sf::Color::Black);
+    rt.setString(std::to_string(reloadTime));
+    rt.setPosition(5, 70);
+
 
     window.draw(circle);
     window.draw(hb);
     window.draw(hp);
+    window.draw(rb);
+    window.draw(rp);
+    window.draw(rt);
 }
 
 std::string Player::getInfo() const {
@@ -142,7 +175,7 @@ std::string Player::getInfo() const {
            //"\nVelocity: " + std::to_string((int)vel.x) + ", " + std::to_string((int)vel.y) +
            //"\nRotation: " + std::to_string(rotationAngle) +
            "\nHealth: " + std::to_string((int)health) + "/" + std::to_string((int)maxHealth) +
-           "\nPistol: " + std::to_string(ammo) + "/" + std::to_string(maxAmmo) + " (" + std::to_string(totalAmmo - ammo) + ")";
+           "\nPistol: " + std::to_string(ammo) + "/" + std::to_string(maxAmmo) + " (" + std::to_string(totalAmmo) + ")";
 }
 
 void Player::setVelocity(sf::Vector2f v) {
@@ -166,10 +199,10 @@ void Player::rotateTo(sf::Vector2i pos) {
 
 // Add new bullets to the entity list
 void Player::shoot(std::list<Ball *> *e) {
-    if (attackTime >= attackSpeed && ammo > 0) {
+    if (attackTime >= attackSpeed && ammo > 0 && !reloading) {
         switch (weapon) {
             case '0':
-                e->push_back(new Ball(GLOBAL_ID_COUNT, barrelPos.x, barrelPos.y, 0, 0, 0, 0, 5, this->c, 0, sf::Color(235, 205, 50, 255)));
+                e->push_back(new Ball(GLOBAL_ID_COUNT, barrelPos.x, barrelPos.y, unit(relativePos).x * 500, unit(relativePos).y * 500, 0, 0, 5, this->c, 1, sf::Color(235, 205, 50, 255))); // change to new Bullet(Vector2f spawnPos, Vector2f targetPos)
                 GLOBAL_ID_COUNT++;
                 break;
             case '1':
@@ -185,12 +218,8 @@ void Player::shoot(std::list<Ball *> *e) {
 }
 
 void Player::reload() {
-    if (ammo < maxAmmo) {
+    if (ammo < maxAmmo && !reloading) {
         reloadTime = 0;
-        if (reloadTime >= reloadSpeed) {
-            totalAmmo -= maxAmmo - ammo;
-            ammo = maxAmmo;
-            reloadTime = 0;
-        }
+        reloading = true;
     }
 }

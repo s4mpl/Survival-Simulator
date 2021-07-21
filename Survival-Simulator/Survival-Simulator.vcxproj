@@ -152,6 +152,8 @@
   <ItemGroup>
     <ClInclude Include="Ball.h" />
     <ClCompile Include="Ball.cpp" />
+    <ClInclude Include="Bullet.h" />
+    <ClInclude Include="Entity.h" />
     <ClInclude Include="Player.h" />
     <ClCompile Include="Utils.cpp" />
     <ClInclude Include="Utils.h" />

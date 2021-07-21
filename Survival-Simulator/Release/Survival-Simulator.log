@@ -1,8 +1,17 @@
-﻿  Player.cpp
-C:\Users\brandan\source\repos\Survival-Simulator\Survival-Simulator\Player.cpp(32,11): warning C4101: 'overlap': unreferenced local variable
-C:\Users\brandan\source\repos\Survival-Simulator\Survival-Simulator\Player.cpp(32,25): warning C4101: 'otherMag': unreferenced local variable
-C:\Users\brandan\source\repos\Survival-Simulator\Survival-Simulator\Player.cpp(32,20): warning C4101: 'mag': unreferenced local variable
-C:\Users\brandan\source\repos\Survival-Simulator\Survival-Simulator\Player.cpp(163,63): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+﻿  Ball.cpp
+C:\Users\brandan\source\repos\Survival-Simulator\Survival-Simulator\Ball.cpp(20,26): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\brandan\source\repos\Survival-Simulator\Survival-Simulator\Ball.cpp(207,56): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\brandan\source\repos\Survival-Simulator\Survival-Simulator\Ball.cpp(213,75): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\brandan\source\repos\Survival-Simulator\Survival-Simulator\Ball.cpp(256,59): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\brandan\source\repos\Survival-Simulator\Survival-Simulator\Ball.cpp(276,59): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\brandan\source\repos\Survival-Simulator\Survival-Simulator\Ball.cpp(349,40): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\brandan\source\repos\Survival-Simulator\Survival-Simulator\Ball.cpp(352,23): warning C4018: '<': signed/unsigned mismatch
+C:\Users\brandan\source\repos\Survival-Simulator\Survival-Simulator\Ball.cpp(353,39): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+  Player.cpp
+C:\Users\brandan\source\repos\Survival-Simulator\Survival-Simulator\Player.cpp(34,11): warning C4101: 'overlap': unreferenced local variable
+C:\Users\brandan\source\repos\Survival-Simulator\Survival-Simulator\Player.cpp(34,25): warning C4101: 'otherMag': unreferenced local variable
+C:\Users\brandan\source\repos\Survival-Simulator\Survival-Simulator\Player.cpp(34,20): warning C4101: 'mag': unreferenced local variable
+C:\Users\brandan\source\repos\Survival-Simulator\Survival-Simulator\Player.cpp(196,63): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
   main.cpp
 C:\Users\brandan\source\repos\Survival-Simulator\Survival-Simulator\main.cpp(27,54): warning C4244: 'argument': conversion from 'const float' to 'unsigned int', possible loss of data
 C:\Users\brandan\source\repos\Survival-Simulator\Survival-Simulator\main.cpp(27,43): warning C4244: 'argument': conversion from 'const float' to 'unsigned int', possible loss of data
@@ -10,8 +19,8 @@ C:\Users\brandan\source\repos\Survival-Simulator\Survival-Simulator\main.cpp(48,
 C:\Users\brandan\source\repos\Survival-Simulator\Survival-Simulator\main.cpp(48,42): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
 C:\Users\brandan\source\repos\Survival-Simulator\Survival-Simulator\main.cpp(23,12): warning C4101: 'j': unreferenced local variable
   Generating code
-  20 of 498 functions ( 4.0%) were compiled, the rest were copied from previous compilation.
+  0 of 500 functions ( 0.0%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
-    10 functions had inline decision re-evaluated but remain unchanged
+    0 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
   Survival-Simulator.vcxproj -> C:\Users\brandan\source\repos\Survival-Simulator\Release\Survival-Simulator.exe

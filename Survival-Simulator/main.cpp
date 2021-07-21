@@ -128,7 +128,12 @@ int main() {
                         ((*it)->getPosition().x - (*it)->getRadius() >= (*it2)->getPosition().x - (*it2)->getRadius() &&
                          (*it)->getPosition().x + (*it)->getRadius() <= (*it2)->getPosition().x + (*it2)->getRadius())) {
                         mit = closeEntities.find((*it));
-                        mit->second->insert((*it2));
+                        if (mit == closeEntities.end()) {
+                            ballSet = new std::set<Ball*>();
+                            ballSet->insert((*it2));
+                            closeEntities.insert(make_pair((*it), ballSet));
+                        }
+                        else mit->second->insert((*it2));
                     }
                 }
             }

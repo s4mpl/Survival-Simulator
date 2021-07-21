@@ -23,6 +23,7 @@ class Player : public Ball {
         float attackTime;
         float reloadSpeed;
         float reloadTime;
+        bool reloading;
 
 	public:
         Player(int id, sf::Clock &clock);
