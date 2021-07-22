@@ -10,123 +10,18 @@ const float yMin = 0;
 const float vMax = 1000;
 std::string s = "not working";
 
-Ball::Ball(int id, sf::Clock &clock) {
+Ball::Ball(int id, float xPos, float yPos, float xVel, float yVel, float xAcc, float yAcc, float length, sf::Clock& clock, float elasticity, sf::Color color)
+    : Entity{ id, xPos, yPos, xVel, yVel, xAcc, yAcc, length, clock, elasticity, color } {
     // Load the sounds used in the game
     if (!ballSoundBuffer.loadFromFile("resources/ball.wav")) exit(-1);
     ballSound.setBuffer(ballSoundBuffer);
 
-    this->id = id;
-
-    radius = rand() % 50 + 5;
-    mass = pow(radius, 2);
-    pos = { 0, 0 };
-    vel = { 0, 0 };
-    acc = { 0, 0 };
-
-    c = clock;
-    currTime = c.getElapsedTime().asSeconds();
-
-    elasticity = 1;
-
-    color = sf::Color::Cyan;
+    radius = length;
     ballSound.setPitch(20 / radius);
 }
 
-Ball::Ball(int id, float xPos, float yPos, float xVel, float yVel, float radius, sf::Clock &clock) {
-    // Load the sounds used in the game
-    if (!ballSoundBuffer.loadFromFile("resources/ball.wav")) exit(-1);
-    ballSound.setBuffer(ballSoundBuffer);
 
-    this->id = id;
-
-    this->radius = radius;
-    mass = pow(radius, 2);
-    pos = { xPos, yPos };
-    vel = { xVel, yVel };
-    acc = { 0, 0 };
-
-    c = clock;
-    currTime = c.getElapsedTime().asSeconds();
-
-    elasticity = 1;
-
-    color = sf::Color::Cyan;
-    ballSound.setPitch(20 / radius);
-}
-
-Ball::Ball(int id, float xPos, float yPos, float xVel, float yVel, float xAcc, float yAcc, float radius, sf::Clock &clock) {
-    // Load the sounds used in the game
-    if (!ballSoundBuffer.loadFromFile("resources/ball.wav")) exit(-1);
-    ballSound.setBuffer(ballSoundBuffer);
-
-    this->id = id;
-
-    this->radius = radius;
-    mass = pow(radius, 2);
-    pos = { xPos, yPos };
-    vel = { xVel, yVel };
-    acc = { xAcc, yAcc };
-
-    c = clock;
-    currTime = c.getElapsedTime().asSeconds();
-
-    elasticity = 1;
-
-    color = sf::Color::Cyan;
-    ballSound.setPitch(20 / radius);
-}
-
-Ball::Ball(int id, float xPos, float yPos, float xVel, float yVel, float xAcc, float yAcc, float radius, sf::Clock& clock, float elasticity) {
-    // Load the sounds used in the game
-    if (!ballSoundBuffer.loadFromFile("resources/ball.wav")) exit(-1);
-    ballSound.setBuffer(ballSoundBuffer);
-
-    this->id = id;
-
-    this->radius = radius;
-    mass = pow(radius, 2);
-    pos = { xPos, yPos };
-    vel = { xVel, yVel };
-    acc = { xAcc, yAcc };
-
-    c = clock;
-    currTime = c.getElapsedTime().asSeconds();
-
-    this->elasticity = elasticity;
-
-    color = sf::Color::Cyan;
-    ballSound.setPitch(20 / radius);
-}
-
-Ball::Ball(int id, float xPos, float yPos, float xVel, float yVel, float xAcc, float yAcc, float radius, sf::Clock& clock, float elasticity, sf::Color color) {
-    // Load the sounds used in the game
-    if (!ballSoundBuffer.loadFromFile("resources/ball.wav")) exit(-1);
-    ballSound.setBuffer(ballSoundBuffer);
-
-    this->id = id;
-
-    this->radius = radius;
-    mass = pow(radius, 2);
-    pos = { xPos, yPos };
-    vel = { xVel, yVel };
-    acc = { xAcc, yAcc };
-
-    c = clock;
-    currTime = c.getElapsedTime().asSeconds();
-
-    this->elasticity = elasticity;
-
-    this->color = color;
-    ballSound.setPitch(20 / radius);
-}
-
-// For maps and sets to work with Balls
-bool Ball::operator<(const Ball &other) const {
-    if (other.id < this->id) return true;
-}
-
-
-void Ball::update(std::set<Ball *> *closeEntities) { // Change to Entity later
+void Ball::update(std::set<Entity *> *closeEntities) {
     float overlap, mag, otherMag, colTime;
     sf::Vector2f p1Old, p2Old, p1New, p2New, p1Col, p2Col, v1Old, v2Old, v1New, v2New;
     collided = NULL;
@@ -151,90 +46,93 @@ void Ball::update(std::set<Ball *> *closeEntities) { // Change to Entity later
     if (fabs(vel.y) < 0.1) vel.y = 0;*/
 
     // Check if colliding with other entities, update velocities
-    for (std::set<Ball *>::iterator other = closeEntities->begin(); other != closeEntities->end(); other++) {
-        if (id == (*other)->id) continue;
+    for (std::set<Entity*>::iterator other = closeEntities->begin(); other != closeEntities->end(); other++) {
+        if (id == (*other)->getId()) continue;
         /*s = "Checking for collision... (" + std::to_string(currTime) + ")\n" +
             "p1: " + std::to_string(pos.x) + ", p2: " + std::to_string((*other)->pos.x) +
             "\ndistance: " + std::to_string(distance(pos, (*other)->pos));*/
 
-        // Continuous collision detection
-        p1Old = pos;
-        p2Old = (*other)->pos;
-        p1New = p1Old + vel * dt;
-        p2New = p2Old + vel * dt;
-        v1Old = vel;
-        v2Old = (*other)->vel;
-        mag = magnitude(vel);
-        otherMag = magnitude((*other)->vel);
+        if (getShape() == "circle" && (*other)->getShape() == "circle") {
+            Ball *otherB = (Ball *)(*other);
+            // Continuous collision detection
+            p1Old = pos;
+            p2Old = otherB->pos;
+            p1New = p1Old + vel * dt;
+            p2New = p2Old + vel * dt;
+            v1Old = vel;
+            v2Old = otherB->vel;
+            mag = magnitude(vel);
+            otherMag = magnitude(otherB->vel);
 
-        for (colTime = 0; colTime <= 1; colTime += 0.001f) { // Could be better
-            // Interpolate positions
-            p1Col = p1Old + (p1New - p1Old) * colTime;
-            p2Col = p2Old + (p2New - p2Old) * colTime;
+            for (colTime = 0; colTime <= 1; colTime += 0.001f) { // Could be better
+                // Interpolate positions
+                p1Col = p1Old + (p1New - p1Old) * colTime;
+                p2Col = p2Old + (p2New - p2Old) * colTime;
 
-            // If distance <= combined radii, they are intersecting
-            overlap = radius + (*other)->radius - distance(p1Col, p2Col);
+                // If distance <= combined radii, they are intersecting
+                overlap = radius + otherB->radius - distance(p1Col, p2Col);
 
-            if (overlap > 0) {
-                // Prevent collisions from happening again between these two balls before they are updated again
-                if ((*other)->collided != this) {
-                    collided = *other;
-                    (*other)->collided = this;
+                if (overlap > 0) {
+                    // Prevent collisions from happening again between these two balls before they are updated again
+                    if (otherB->collided != this) {
+                        collided = *other;
+                        otherB->collided = this;
 
-                    // Handle the balls at this timestep
-                    dt *= colTime;
-                    (*other)->dt *= colTime;
-                    pos = p1Col;
-                    (*other)->pos = p2Col;
+                        // Handle the balls at this timestep
+                        dt *= colTime;
+                        otherB->dt *= colTime;
+                        pos = p1Col;
+                        otherB->pos = p2Col;
 
-                    overlap = radius + (*other)->radius - distance(p1Col, p2Col);
-                    if (overlap >= 0) {
-                        // Separate the balls using half the overlap times the direction of old velocity (https://youtu.be/guWIF87CmBg?t=854)
-                        // It's not enough to separate in all cases for some reason (or it is doing the colision on both balls from each ball?), so multiply by some constant for now
-                        if (v1Old != sf::Vector2f{ 0, 0 } && elasticity != 0) pos -= unit(v1Old) * (/*4 / elasticity **/ overlap / 2);
-                        if (v2Old != sf::Vector2f{ 0, 0 } && (*other)->elasticity != 0) (*other)->pos -= unit(v2Old) * (/*4 / (*other)->elasticity **/ overlap / 2);
-                    }
+                        overlap = radius + otherB->radius - distance(p1Col, p2Col);
+                        if (overlap >= 0) {
+                            // Separate the balls using half the overlap times the direction of old velocity (https://youtu.be/guWIF87CmBg?t=854)
+                            // It's not enough to separate in all cases for some reason (or it is doing the colision on both balls from each ball?), so multiply by some constant for now
+                            if (v1Old != sf::Vector2f{ 0, 0 } && elasticity != 0) pos -= unit(v1Old) * (/*4 / elasticity **/ overlap / 2);
+                            if (v2Old != sf::Vector2f{ 0, 0 } && otherB->elasticity != 0) otherB->pos -= unit(v2Old) * (/*4 / (*other)->elasticity **/ overlap / 2);
+                        }
 
-                    // Use old velocities in both calculations or else it updates one before the other
-                    v1New = elasticity * computeCollision(pos, (*other)->pos, v1Old, v2Old, mass, (*other)->mass);
-                    v2New = (*other)->elasticity * computeCollision((*other)->pos, pos, v2Old, v1Old, (*other)->mass, mass);
+                        // Use old velocities in both calculations or else it updates one before the other
+                        v1New = elasticity * computeCollision(pos, otherB->pos, v1Old, v2Old, mass, otherB->mass);
+                        v2New = otherB->elasticity * computeCollision(otherB->pos, pos, v2Old, v1Old, otherB->mass, mass);
 
-                    vel = v1New;
-                    (*other)->vel = v2New;
-                    
-                    if (mag > 7) {
-                        // Update sound of collision relative to current state / mass
-                        ballSound.setVolume(0.01 * mag * mass);
-                        ballSound.play();
-                    }
-                    if (otherMag > 7) {
-                        if ((*other)->id != -1) {
+                        vel = v1New;
+                        otherB->vel = v2New;
+
+                        if (mag > 7) {
                             // Update sound of collision relative to current state / mass
-                            (*other)->ballSound.setVolume(0.01 * otherMag * mass);
-                            (*other)->ballSound.play();
+                            ballSound.setVolume(0.01 * mag * mass);
+                            ballSound.play();
+                        }
+                        if (otherMag > 7) {
+                            if (otherB->id != -1) {
+                                // Update sound of collision relative to current state / mass
+                                otherB->ballSound.setVolume(0.01 * otherMag * mass);
+                                otherB->ballSound.play();
+                            }
+                        }
+                        if (otherB->id == -1) {
+                            // Health lost is proportional to how hard the collision was (force against the player)
+                            ((Player *)(*other))->damagePlayer(magnitude(otherB->vel) / 10);
                         }
                     }
-                    if ((*other)->id == -1) {
-                        // Health lost is proportional to how hard the collision was (force against the player)
-                        ((Player*)(*other))->damagePlayer(magnitude((*other)->vel) / 10);
-                    }
+
+                    break;
                 }
-
-                break;
             }
-        }
 
-        // If still inside each other, separate them more and check again next frame
-        overlap = radius + (*other)->radius - distance(p1Col, p2Col);
-        if (overlap > 0) {
-            // Separate the balls using half the overlap times the direction of old velocity (https://youtu.be/guWIF87CmBg?t=854)
-            // It's not enough to separate in all cases for some reason (or it is doing the colision on both balls from each ball?), so multiply by some constant for now
-            if (v1Old != sf::Vector2f{ 0, 0 } && elasticity != 0) pos -= unit(v1Old) * (/*4 / elasticity **/ overlap / 2);
-            if (v2Old != sf::Vector2f{ 0, 0 } && (*other)->elasticity != 0) (*other)->pos -= unit(v2Old) * (/*4 / (*other)->elasticity **/ overlap / 2);
-        }
-        else {
-            // If the other ball already handled the collision, still get rid of its pointer from closeEntities
-            closeEntities->erase(other); // Should make closeEntities a member variable and remove "collided"
+            // If still inside each other, separate them more and check again next frame
+            overlap = radius + otherB->radius - distance(p1Col, p2Col);
+            if (overlap > 0) {
+                // Separate the balls using half the overlap times the direction of old velocity (https://youtu.be/guWIF87CmBg?t=854)
+                // It's not enough to separate in all cases for some reason (or it is doing the colision on both balls from each ball?), so multiply by some constant for now
+                if (v1Old != sf::Vector2f{ 0, 0 } && elasticity != 0) pos -= unit(v1Old) * (/*4 / elasticity **/ overlap / 2);
+                if (v2Old != sf::Vector2f{ 0, 0 } && otherB->elasticity != 0) otherB->pos -= unit(v2Old) * (/*4 / otherB->elasticity **/ overlap / 2);
+            }
+            else {
+                // If the other ball already handled the collision, still get rid of its pointer from closeEntities
+                closeEntities->erase(other); // Should make closeEntities a member variable and remove "collided"
+            }
         }
     }
 
@@ -334,11 +232,6 @@ void Ball::update(std::set<Ball *> *closeEntities) { // Change to Entity later
     }*/
 }
 
-void Ball::advance() {
-    pos += vel * dt;
-    collided = NULL;
-}
-
 void Ball::draw(sf::RenderWindow &window) {
     // Draw ball to the window using position vector
     sf::CircleShape circle(radius);
@@ -351,7 +244,7 @@ void Ball::draw(sf::RenderWindow &window) {
     float trailR;
     for (int i = 0; i < trail.size(); i++) {
         trailR = log2(i) * radius / 3 > radius ? radius : log2(i) * radius / 4;
-        trail[i]->setRadius(trailR); // tail gets smaller at the end
+        trail[i]->setRadius(trailR); // trail gets smaller at the end
         trail[i]->setOrigin(trailR, trailR);
         window.draw(*trail[i]);
     }
@@ -359,30 +252,14 @@ void Ball::draw(sf::RenderWindow &window) {
     window.draw(circle);
 }
 
-sf::Vector2f Ball::getPosition() const {
-    return pos;
-}
-
-sf::Vector2f Ball::getVelocity() const {
-    return vel;
-}
-
-sf::Vector2f Ball::getAcceleration() const {
-    return acc;
-}
-
 float Ball::getRadius() const {
     return radius;
 }
 
-int Ball::getId() const {
-    return id;
+std::string Ball::getEntity() const {
+    return "Ball";
 }
 
-std::string Ball::getInfo() const {
-    /*return "pos: (" + std::to_string(pos.x) + ", " + std::to_string(pos.y) + ")\n" +
-            "vel: (" + std::to_string(vel.x) + ", " + std::to_string(vel.y) + ")\n" +
-            "acc: (" + std::to_string(acc.x) + ", " + std::to_string(acc.y) + ")\n";*/
-    //return s;
-    return "FPS: " + std::to_string(1 / dt);
+std::string Ball::getShape() const {
+    return "circle";
 }

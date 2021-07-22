@@ -5,8 +5,10 @@
 #include <list>
 #include "Ball.h"
 
-class Player : public Ball {
+class Player : public Entity {
 	protected:
+        float radius;
+
         float health;
         float maxHealth;
         int ammo;
@@ -27,13 +29,13 @@ class Player : public Ball {
 
 	public:
         Player(int id, sf::Clock &clock);
-        void update(std::set<Ball *> *closeEntities) final;
+        void update(std::set<Entity *> *closeEntities) final;
         void draw(sf::RenderWindow &window) final;
         std::string getInfo() const final;
         void setVelocity(sf::Vector2f v);
         void addVelocity(sf::Vector2f v);
         void damagePlayer(float amount);
         void rotateTo(sf::Vector2i pos);
-        void shoot(std::list<Ball *> *e);
+        void shoot(std::list<Entity *> *e);
         void reload();
 };

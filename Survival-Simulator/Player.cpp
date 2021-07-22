@@ -12,7 +12,7 @@ const float yMin = 0;
 const float vMax = 100;
 extern int GLOBAL_ID_COUNT;
 
-Player::Player(int id, sf::Clock& clock) : Ball{ id, clock } {
+Player::Player(int id, sf::Clock& clock) : Entity{ id, clock } {
     pos = { (xMin + xMax) / 2, (yMin + yMax) / 2 };
     health = maxHealth = 100;
     radius = 15;
@@ -30,7 +30,7 @@ Player::Player(int id, sf::Clock& clock) : Ball{ id, clock } {
     if (!texture.loadFromFile("resources/eyes.png")) exit(-1);
 }
 
-void Player::update(std::set<Ball *> *closeEntities) {
+void Player::update(std::set<Entity *> *closeEntities) {
     float overlap, mag, otherMag, colTime;
     sf::Vector2f p1Old, p2Old, p1New, p2New, p1Col, p2Col, v1Old, v2Old;
     collided = NULL;
@@ -202,7 +202,7 @@ std::string Player::getInfo() const {
            //"\nVelocity: " + std::to_string((int)vel.x) + ", " + std::to_string((int)vel.y) +
            //"\nRotation: " + std::to_string(rotationAngle) +
            "\nHealth: " + std::to_string((int)health) + "/" + std::to_string((int)maxHealth) +
-           "\nPistol: " + std::to_string(ammo) + "/" + std::to_string(maxAmmo) + " (" + std::to_string(totalAmmo) + ")";
+           "\nPistol: " + std::to_string(ammo) + "/" + std::to_string(maxAmmo) + " (" + std::to_string(totalAmmo) + ")"; // change to be weapon.getInfo()
 }
 
 void Player::setVelocity(sf::Vector2f v) {
@@ -225,7 +225,7 @@ void Player::rotateTo(sf::Vector2i pos) {
 }
 
 // Add new bullets to the entity list
-void Player::shoot(std::list<Ball *> *e) {
+void Player::shoot(std::list<Entity *> *e) {
     if (attackTime >= attackSpeed && ammo > 0 && !reloading) {
         switch (weapon) {
             case '0':

@@ -32,11 +32,12 @@ int main() {
 
     // Create the clock and entities
     sf::Clock clock;
-    //std::deque<Entity> entities;
-    std::list<Ball *> balls; // Use a list so that it is not constantly copied around while resizing, losing the ability to play sound or something, and also I can add entities while traversing
-    std::list<Ball *>::iterator it, it2;
-    std::map<Ball *, std::set<Ball *> *> closeEntities;
-    std::map<Ball *, std::set<Ball *> *>::iterator mit;
+    std::list<Entity *> entities; // Use a list so that it is not constantly copied around while resizing, losing the ability to play sound or something, and also I can add entities while traversing
+    std::list<Entity *>::iterator it, it2;
+    std::map<Entity*, std::set<Entity*> *> closeEntities;
+    std::map<Entity*, std::set<Entity*> *>::iterator mit;
+    std::set<Entity*> *entitySet;
+
     //Ball ball = Ball(200, 200, 150, 120, 0, gravityAccel, 20, clock, 1);
     /*balls.push_back(new Ball(0, 200, 200, 150, 120, 0, gravityAccel, 20, clock, 1));
     balls.push_back(new Ball(1, 100, 200, 50, 0, 0, gravityAccel, 50, clock, 0.75, sf::Color::Red));
@@ -51,13 +52,7 @@ int main() {
     //balls.push_back(new Ball(2, 400, 100, -800, 100, 0, gravityAccel, 5, clock, 1.5, sf::Color(235, 205, 50, 100)));
 
     Player *player = new Player(-1, clock);
-    balls.push_back(player);
-
-    std::set<Ball *> *ballSet;
-    for (it = balls.begin(); it != balls.end(); it++) {
-        ballSet = new std::set<Ball *>();
-        closeEntities.insert(make_pair((*it), ballSet));
-    }
+    entities.push_back(player);
 
     // Load the text font
     sf::Font font;
@@ -108,31 +103,31 @@ int main() {
             }
             // Shoot on left click
             if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
-                player->shoot(&balls);
+                player->shoot(&entities);
             }
 
             sf::Vector2i mousePos = sf::Mouse::getPosition(window);
             player->rotateTo(mousePos);
 
             // Optimization to determine close entities for collision-handling (https://youtu.be/eED4bSkYCB8?t=949)
-            for (it = balls.begin(); it != balls.end(); it++) {
+            for (it = entities.begin(); it != entities.end(); it++) {
                 // Ensure every entity is in the map -- source of crashes for bullets that did not overlap with the player's 'x' value or another bullet upon spawning
                 mit = closeEntities.find((*it));
                 if (mit == closeEntities.end()) {
-                    ballSet = new std::set<Ball*>();
-                    closeEntities.insert(make_pair((*it), ballSet));
+                    entitySet = new std::set<Entity *>();
+                    closeEntities.insert(make_pair((*it), entitySet));
                 }
-                for (it2 = balls.begin(); it2 != balls.end(); it2++) {
+                for (it2 = entities.begin(); it2 != entities.end(); it2++) {
                     if ((*it) == (*it2)) continue;
                     // Check "x-range" of each to see if it is within the "x-range" of another
-                    if (((*it)->getPosition().x - (*it)->getRadius() <= (*it2)->getPosition().x + (*it2)->getRadius() + 1 &&
-                         (*it)->getPosition().x - (*it)->getRadius() >= (*it2)->getPosition().x - (*it2)->getRadius() - 1)
+                    if (((*it)->getPosition().x - (*it)->getLength() <= (*it2)->getPosition().x + (*it2)->getLength() + 1 &&
+                         (*it)->getPosition().x - (*it)->getLength() >= (*it2)->getPosition().x - (*it2)->getLength() - 1)
                         ||
-                        ((*it)->getPosition().x + (*it)->getRadius() <= (*it2)->getPosition().x + (*it2)->getRadius() + 1 &&
-                         (*it)->getPosition().x + (*it)->getRadius() >= (*it2)->getPosition().x - (*it2)->getRadius() - 1)
+                        ((*it)->getPosition().x + (*it)->getLength() <= (*it2)->getPosition().x + (*it2)->getLength() + 1 &&
+                         (*it)->getPosition().x + (*it)->getLength() >= (*it2)->getPosition().x - (*it2)->getLength() - 1)
                         ||
-                        ((*it)->getPosition().x - (*it)->getRadius() >= (*it2)->getPosition().x - (*it2)->getRadius() &&
-                         (*it)->getPosition().x + (*it)->getRadius() <= (*it2)->getPosition().x + (*it2)->getRadius())) {
+                        ((*it)->getPosition().x - (*it)->getLength() >= (*it2)->getPosition().x - (*it2)->getLength() &&
+                         (*it)->getPosition().x + (*it)->getLength() <= (*it2)->getPosition().x + (*it2)->getLength())) {
                         mit = closeEntities.find((*it));
                         mit->second->insert((*it2));
                     }
@@ -140,14 +135,14 @@ int main() {
             }
 
             // For every entity...
-            for (it = balls.begin(); it != balls.end(); it++) {
+            for (it = entities.begin(); it != entities.end(); it++) {
                 // Update state
                 mit = closeEntities.find(*it);
                 (*it)->update(mit->second);
                 // Render the scene
                 (*it)->draw(window);
             }
-            for (it = balls.begin(); it != balls.end(); it++) {
+            for (it = entities.begin(); it != entities.end(); it++) {
                 (*it)->advance();
             }
 
