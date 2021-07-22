@@ -15,8 +15,10 @@ extern int GLOBAL_ID_COUNT;
 Player::Player(int id, sf::Clock& clock) : Entity{ id, clock } {
     pos = { (xMin + xMax) / 2, (yMin + yMax) / 2 };
     health = maxHealth = 100;
-    radius = 15;
+    radius = length = 15;
     mass = pow(radius, 2);
+    elasticity = 1;
+
     ammo = 7;
     maxAmmo = 7;
     totalAmmo = 98;
@@ -28,6 +30,15 @@ Player::Player(int id, sf::Clock& clock) : Entity{ id, clock } {
     reloading = false;
 
     if (!texture.loadFromFile("resources/eyes.png")) exit(-1);
+
+    // move to Weapon
+    if (!reloadSoundBuffer.loadFromFile("resources/pistol-reload.wav")) exit(-1);
+    if (!gun1SoundBuffer.loadFromFile("resources/pistol-shot-1.wav")) exit(-1);
+    if (!gun2SoundBuffer.loadFromFile("resources/pistol-shot-2.wav")) exit(-1);
+    reloadSound.setBuffer(reloadSoundBuffer);
+    gunSound1.setBuffer(gun1SoundBuffer);
+    gunSound2.setBuffer(gun2SoundBuffer);
+    numSounds = 2;
 }
 
 void Player::update(std::set<Entity *> *closeEntities) {
@@ -229,7 +240,9 @@ void Player::shoot(std::list<Entity *> *e) {
     if (attackTime >= attackSpeed && ammo > 0 && !reloading) {
         switch (weapon) {
             case '0':
-                e->push_back(new Ball(GLOBAL_ID_COUNT, barrelPos.x, barrelPos.y, unit(relativePos).x * 500, unit(relativePos).y * 500, 0, 0, 2.5, this->c, 0, sf::Color(235, 205, 50, 255))); // change to new Bullet(Vector2f spawnPos, Vector2f targetPos)
+                // change to new Bullet(Vector2f spawnPos, Vector2f targetPos)
+                e->push_back(new Ball(GLOBAL_ID_COUNT, barrelPos.x, barrelPos.y, unit(relativePos).x * 700, unit(relativePos).y * 700, 0, 0, 2.5, this->c, 1, sf::Color(235, 205, 50, 255)));
+                rand() * numSounds == 0 ? gunSound1.play() : gunSound2.play();
                 GLOBAL_ID_COUNT++;
                 break;
             case '1':
@@ -248,5 +261,14 @@ void Player::reload() {
     if (ammo < maxAmmo && !reloading) {
         reloadTime = 0;
         reloading = true;
+        reloadSound.play();
     }
+}
+
+std::string Player::getEntity() const {
+    return "Player"; // alternatively, check id == -1
+}
+
+std::string Player::getShape() const {
+    return "circle";
 }

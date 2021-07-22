@@ -48,9 +48,6 @@ void Ball::update(std::set<Entity *> *closeEntities) {
     // Check if colliding with other entities, update velocities
     for (std::set<Entity*>::iterator other = closeEntities->begin(); other != closeEntities->end(); other++) {
         if (id == (*other)->getId()) continue;
-        /*s = "Checking for collision... (" + std::to_string(currTime) + ")\n" +
-            "p1: " + std::to_string(pos.x) + ", p2: " + std::to_string((*other)->pos.x) +
-            "\ndistance: " + std::to_string(distance(pos, (*other)->pos));*/
 
         if (getShape() == "circle" && (*other)->getShape() == "circle") {
             Ball *otherB = (Ball *)(*other);

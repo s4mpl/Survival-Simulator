@@ -27,6 +27,15 @@ class Player : public Entity {
         float reloadTime;
         bool reloading;
 
+        // move to Weapon
+        sf::SoundBuffer reloadSoundBuffer;
+        sf::SoundBuffer gun1SoundBuffer;
+        sf::SoundBuffer gun2SoundBuffer;
+        sf::Sound reloadSound;
+        sf::Sound gunSound1;
+        sf::Sound gunSound2;
+        int numSounds;
+
 	public:
         Player(int id, sf::Clock &clock);
         void update(std::set<Entity *> *closeEntities) final;
@@ -38,4 +47,6 @@ class Player : public Entity {
         void rotateTo(sf::Vector2i pos);
         void shoot(std::list<Entity *> *e);
         void reload();
+        std::string getEntity() const override;
+        std::string getShape() const override;
 };

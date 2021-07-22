@@ -45,11 +45,11 @@ int main() {
     balls.push_back(new Ball(3, 500, 200, 500, 0, 0, gravityAccel, 20, clock, 1, sf::Color::Yellow));
     balls.push_back(new Ball(4, 700, 200, -500, 0, 0, gravityAccel, 20, clock, 1, sf::Color::Green));
     balls.push_back(new Ball(5, 600, 350, 0, -200, 0, gravityAccel, 30, clock, 0.7, sf::Color::Magenta));*/
+
     /*for (i = 1; i <= 10; i++) {
-        balls.push_back(new Ball(i-1, 45 * ((i % 20) + 1), 45 * ((i / 6) + 1), 200, 200, 0, gravityAccel, 10, clock, 1));
+        entities.push_back(new Ball(i-1, 45 * ((i % 20) + 1), 45 * ((i / 6) + 1), 200, 200, 0, gravityAccel, 10, clock, 1, sf::Color::Cyan));
         GLOBAL_ID_COUNT++;
     }*/
-    //balls.push_back(new Ball(2, 400, 100, -800, 100, 0, gravityAccel, 5, clock, 1.5, sf::Color(235, 205, 50, 100)));
 
     Player *player = new Player(-1, clock);
     entities.push_back(player);
@@ -118,7 +118,7 @@ int main() {
                     closeEntities.insert(make_pair((*it), entitySet));
                 }
                 for (it2 = entities.begin(); it2 != entities.end(); it2++) {
-                    if ((*it) == (*it2)) continue;
+                    if ((*it)->getId() == (*it2)->getId()) continue;
                     // Check "x-range" of each to see if it is within the "x-range" of another
                     if (((*it)->getPosition().x - (*it)->getLength() <= (*it2)->getPosition().x + (*it2)->getLength() + 1 &&
                          (*it)->getPosition().x - (*it)->getLength() >= (*it2)->getPosition().x - (*it2)->getLength() - 1)

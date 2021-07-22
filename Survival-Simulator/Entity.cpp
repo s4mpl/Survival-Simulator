@@ -180,9 +180,7 @@ void Entity::advance() {
     collided = NULL;
 }
 
-void Entity::draw(sf::RenderWindow& window) {
-
-}
+void Entity::draw(sf::RenderWindow& window) {}
 
 sf::Vector2f Entity::getPosition() const {
     return pos;
