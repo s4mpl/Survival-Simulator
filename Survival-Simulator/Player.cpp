@@ -21,7 +21,7 @@ Player::Player(int id, sf::Clock& clock) : Entity{ id, clock } {
 
     ammo = 7;
     maxAmmo = 7;
-    totalAmmo = 98;
+    totalAmmo = 42;
     weapon = '0';
     attackSpeed = 0.75f;
     attackTime = currTime;
@@ -35,16 +35,19 @@ Player::Player(int id, sf::Clock& clock) : Entity{ id, clock } {
     if (!reloadSoundBuffer.loadFromFile("resources/pistol-reload.wav")) exit(-1);
     if (!gun1SoundBuffer.loadFromFile("resources/pistol-shot-1.wav")) exit(-1);
     if (!gun2SoundBuffer.loadFromFile("resources/pistol-shot-2.wav")) exit(-1);
+    if (!emptyGunSoundBuffer.loadFromFile("resources/empty-gun-shot.wav")) exit(-1);
     reloadSound.setBuffer(reloadSoundBuffer);
     gunSound1.setBuffer(gun1SoundBuffer);
     gunSound2.setBuffer(gun2SoundBuffer);
     numSounds = 2;
+    emptyGunSound.setBuffer(emptyGunSoundBuffer);
 }
 
 void Player::update(std::set<Entity *> *closeEntities) {
     float overlap, mag, otherMag, colTime;
     sf::Vector2f p1Old, p2Old, p1New, p2New, p1Col, p2Col, v1Old, v2Old;
     collided = NULL;
+    int numReloaded = 0;
 
     // Get delta time
     lastTime = currTime;
@@ -57,8 +60,9 @@ void Player::update(std::set<Entity *> *closeEntities) {
     if (attackTime > attackSpeed) attackTime = attackSpeed; // for the attack bar
 
     if (reloading && reloadTime >= reloadSpeed) {
-        totalAmmo -= maxAmmo - ammo;
-        ammo = maxAmmo;
+        numReloaded = totalAmmo < maxAmmo - ammo ? totalAmmo : maxAmmo - ammo; // give the lesser of the two
+        totalAmmo -= numReloaded;
+        ammo += numReloaded;
         reloadTime = 0;
         reloading = false;
     }
@@ -237,12 +241,13 @@ void Player::rotateTo(sf::Vector2i pos) {
 
 // Add new bullets to the entity list
 void Player::shoot(std::list<Entity *> *e) {
-    if (attackTime >= attackSpeed && ammo > 0 && !reloading) {
-        switch (weapon) {
+    if (attackTime >= attackSpeed && !reloading) {
+        if (ammo > 0) {
+            switch (weapon) {
             case '0':
                 // change to new Bullet(Vector2f spawnPos, Vector2f targetPos)
-                e->push_back(new Ball(GLOBAL_ID_COUNT, barrelPos.x, barrelPos.y, unit(relativePos).x * 700, unit(relativePos).y * 700, 0, 0, 2.5, this->c, 1, sf::Color(235, 205, 50, 255)));
-                rand() * numSounds == 0 ? gunSound1.play() : gunSound2.play();
+                e->push_back(new Ball(GLOBAL_ID_COUNT, barrelPos.x, barrelPos.y, unit(relativePos).x * 700, unit(relativePos).y * 700, 0, 0, 2.5, this->c, 0, sf::Color(235, 205, 50, 255)));
+                rand() % numSounds == 0 ? gunSound1.play() : gunSound2.play();
                 GLOBAL_ID_COUNT++;
                 break;
             case '1':
@@ -250,15 +255,20 @@ void Player::shoot(std::list<Entity *> *e) {
                 break;
             default:
                 break;
+            }
+            attackTime = 0;
+            ammo--;
+            if (ammo < 1) reload();
         }
-        attackTime = 0;
-        ammo--;
-        if (ammo < 1) reload();
+        else {
+            emptyGunSound.play();
+            attackTime = 0;
+        }
     }
 }
 
 void Player::reload() {
-    if (ammo < maxAmmo && !reloading) {
+    if (ammo < maxAmmo && !reloading && totalAmmo > 0) {
         reloadTime = 0;
         reloading = true;
         reloadSound.play();

@@ -31,9 +31,11 @@ class Player : public Entity {
         sf::SoundBuffer reloadSoundBuffer;
         sf::SoundBuffer gun1SoundBuffer;
         sf::SoundBuffer gun2SoundBuffer;
+        sf::SoundBuffer emptyGunSoundBuffer;
         sf::Sound reloadSound;
         sf::Sound gunSound1;
         sf::Sound gunSound2;
+        sf::Sound emptyGunSound;
         int numSounds;
 
 	public:
