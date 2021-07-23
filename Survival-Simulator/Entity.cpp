@@ -30,6 +30,8 @@ Entity::Entity(int id, float xPos, float yPos, float xVel, float yVel, float xAc
     this->elasticity = elasticity;
 
     this->color = color;
+
+    rotationAngle = 0;
 }
 
 // For maps and sets to work with Entities
@@ -208,6 +210,14 @@ void Entity::setAcceleration(sf::Vector2f acc) {
 
 float Entity::getLength() const {
     return length;
+}
+
+float Entity::getRotationAngle() const {
+    return rotationAngle;
+}
+
+sf::Vector2f Entity::getRelativePosition() const {
+    return relativePos;
 }
 
 int Entity::getId() const {

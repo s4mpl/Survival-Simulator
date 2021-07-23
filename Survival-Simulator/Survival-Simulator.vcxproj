@@ -147,13 +147,16 @@
   <ItemGroup>
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Pistol.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="Weapon.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Ball.h" />
     <ClCompile Include="Ball.cpp" />
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="Entity.h" />
+    <ClInclude Include="Pistol.h" />
     <ClInclude Include="Player.h" />
     <ClCompile Include="Utils.cpp" />
     <ClInclude Include="Utils.h" />

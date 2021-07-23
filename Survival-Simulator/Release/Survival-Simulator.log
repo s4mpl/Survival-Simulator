@@ -1,10 +1,11 @@
-﻿  Player.cpp
-C:\Users\brandan\source\repos\Survival-Simulator\Survival-Simulator\Player.cpp(47,11): warning C4101: 'overlap': unreferenced local variable
-C:\Users\brandan\source\repos\Survival-Simulator\Survival-Simulator\Player.cpp(47,25): warning C4101: 'otherMag': unreferenced local variable
-C:\Users\brandan\source\repos\Survival-Simulator\Survival-Simulator\Player.cpp(47,20): warning C4101: 'mag': unreferenced local variable
-C:\Users\brandan\source\repos\Survival-Simulator\Survival-Simulator\Player.cpp(238,87): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+﻿  Pistol.cpp
+  Player.cpp
+C:\Users\brandan\source\repos\Survival-Simulator\Survival-Simulator\Player.cpp(29,11): warning C4101: 'overlap': unreferenced local variable
+C:\Users\brandan\source\repos\Survival-Simulator\Survival-Simulator\Player.cpp(29,25): warning C4101: 'otherMag': unreferenced local variable
+C:\Users\brandan\source\repos\Survival-Simulator\Survival-Simulator\Player.cpp(29,20): warning C4101: 'mag': unreferenced local variable
+C:\Users\brandan\source\repos\Survival-Simulator\Survival-Simulator\Player.cpp(146,87): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
   Generating code
-  0 of 512 functions ( 0.0%) were compiled, the rest were copied from previous compilation.
+  3 of 524 functions ( 0.6%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
     0 functions had inline decision re-evaluated but remain unchanged
   Finished generating code

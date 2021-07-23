@@ -99,11 +99,11 @@ int main() {
                 player->addVelocity({ -50, 0 });
             }
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::R)) {
-                player->reload();
+                player->getWeapon()->reload();
             }
             // Shoot on left click
             if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
-                player->shoot(&entities);
+                player->getWeapon()->shoot(&entities);
             }
 
             sf::Vector2i mousePos = sf::Mouse::getPosition(window);
@@ -147,6 +147,8 @@ int main() {
             }
 
             info.setString(player->getInfo());
+            player->getWeapon()->update();
+            player->getWeapon()->draw(window);
             window.draw(info);
 
             // Display on screen
