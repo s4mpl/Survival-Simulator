@@ -59,5 +59,8 @@
     <ClInclude Include="Pistol.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="LightBullet.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

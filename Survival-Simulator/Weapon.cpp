@@ -22,7 +22,7 @@ Weapon::Weapon(Entity *user, sf::Clock &clock) {
     maxAmmo = 7;
     totalAmmo = 7;
     currTime = c.getElapsedTime().asSeconds();
-    attackSpeed = 0.75f;
+    attackSpeed = 0.05f;
     attackTime = currTime;
     reloadSpeed = 2.5f;
     reloadTime = currTime;
@@ -64,7 +64,7 @@ void Weapon::draw(sf::RenderWindow &window) {
     pistol.setRotation(userRotationAngle);
     pistol.setFillColor(sf::Color(45, 45, 45, 255));
     window.draw(pistol);
-    barrelPos = { userPos + sf::Vector2f{ unit(userRelPos).x * (user->getLength() + 16), unit(userRelPos).y * (userRadius + 16) }
+    barrelPos = { userPos + sf::Vector2f{ unit(userRelPos).x * (userRadius + 16), unit(userRelPos).y * (userRadius + 16) }
                     -sf::Vector2f{ (float)cos((userRotationAngle - 90) * M_PI / 180) * 11, (float)sin((userRotationAngle - 90) * M_PI / 180) * 11 } }; // perpendicular vector
 
     // Reloading bar / reloading progress
@@ -126,7 +126,12 @@ void Weapon::shoot(std::list<Entity *> *e) {
         if (ammo > 0) {
             // change to new Bullet(Vector2f spawnPos, Vector2f targetPos)
             e->push_back(new Ball(GLOBAL_ID_COUNT, barrelPos.x, barrelPos.y, unit(userRelPos).x * 700, unit(userRelPos).y * 700, 0, 0, 2.5, this->c, 0, sf::Color(235, 205, 50, 255)));
-            rand() % numSounds == 0 ? defaultSound.play() : defaultSound.play();
+            switch (rand() % numSounds) {
+                case 0:
+                    defaultSound.play();
+                default:
+                    emptyGunSound.play();
+            }
             GLOBAL_ID_COUNT++;
 
             attackTime = 0;

@@ -13,6 +13,8 @@ Entity::Entity(int id, sf::Clock& clock) {
     this->id = id;
 
     c = clock;
+
+    despawned = false;
 }
 
 Entity::Entity(int id, float xPos, float yPos, float xVel, float yVel, float xAcc, float yAcc, float length, sf::Clock& clock, float elasticity, sf::Color color) {
@@ -32,6 +34,8 @@ Entity::Entity(int id, float xPos, float yPos, float xVel, float yVel, float xAc
     this->color = color;
 
     rotationAngle = 0;
+
+    despawned = false;
 }
 
 // For maps and sets to work with Entities

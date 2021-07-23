@@ -90,7 +90,6 @@ void Player::update(std::set<Entity *> *closeEntities) {
 }
 
 void Player::draw(sf::RenderWindow &window) {
-    // Player
     sf::CircleShape circle(radius);
     circle.setOrigin(radius, radius);
     circle.setPosition(pos);
@@ -100,13 +99,16 @@ void Player::draw(sf::RenderWindow &window) {
     circle.setRotation(rotationAngle);
     circle.setTexture(&texture);
 
-    // Health bar
+    window.draw(circle);
+}
+
+void Player::drawHealthBar(sf::RenderWindow& window) {
     sf::RectangleShape hb({ 52, 4 });
     hb.setOrigin({ 26, 2 });
     hb.setPosition(pos + sf::Vector2f{ 0, -1 - radius - 5 });
     hb.setOutlineColor(sf::Color::Black);
     hb.setOutlineThickness(-1);
-    sf::RectangleShape hp({ health / 2, 2});
+    sf::RectangleShape hp({ health / 2, 2 });
     hp.setOrigin({ 26, 2 });
     hp.setPosition(pos + sf::Vector2f{ 1, -radius - 5 });
     if (health >= 80) hp.setFillColor(sf::Color::Green);
@@ -115,7 +117,6 @@ void Player::draw(sf::RenderWindow &window) {
     else if (health >= 20) hp.setFillColor(sf::Color(255, 100, 0, 255));
     else hp.setFillColor(sf::Color::Red);
 
-    window.draw(circle);
     window.draw(hb);
     window.draw(hp);
 }

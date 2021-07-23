@@ -156,6 +156,7 @@
     <ClCompile Include="Ball.cpp" />
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="Entity.h" />
+    <ClInclude Include="LightBullet.h" />
     <ClInclude Include="Pistol.h" />
     <ClInclude Include="Player.h" />
     <ClCompile Include="Utils.cpp" />

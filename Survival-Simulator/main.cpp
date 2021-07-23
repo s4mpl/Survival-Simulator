@@ -34,9 +34,9 @@ int main() {
     sf::Clock clock;
     std::list<Entity *> entities; // Use a list so that it is not constantly copied around while resizing, losing the ability to play sound or something, and also I can add entities while traversing
     std::list<Entity *>::iterator it, it2;
-    std::map<Entity*, std::set<Entity*> *> closeEntities;
-    std::map<Entity*, std::set<Entity*> *>::iterator mit;
-    std::set<Entity*> *entitySet;
+    std::map<Entity *, std::set<Entity *> *> closeEntities;
+    std::map<Entity *, std::set<Entity *> *>::iterator mit;
+    std::set<Entity *> *entitySet;
 
     //Ball ball = Ball(200, 200, 150, 120, 0, gravityAccel, 20, clock, 1);
     /*balls.push_back(new Ball(0, 200, 200, 150, 120, 0, gravityAccel, 20, clock, 1));
@@ -109,6 +109,18 @@ int main() {
             sf::Vector2i mousePos = sf::Mouse::getPosition(window);
             player->rotateTo(mousePos);
 
+            // For every entity...
+            for (it = entities.begin(); it != entities.end(); it++) {
+                mit = closeEntities.find(*it);
+                // Check if it needs to be despawned
+                if ((*it)->despawned) {
+                    delete mit->second;
+                    delete mit->first; // should be the same pointer as (*it)
+                    closeEntities.erase(mit);
+                    entities.erase(it);
+                }
+            }
+
             // Optimization to determine close entities for collision-handling (https://youtu.be/eED4bSkYCB8?t=949)
             for (it = entities.begin(); it != entities.end(); it++) {
                 // Ensure every entity is in the map -- source of crashes for bullets that did not overlap with the player's 'x' value or another bullet upon spawning
@@ -134,10 +146,9 @@ int main() {
                 }
             }
 
-            // For every entity...
             for (it = entities.begin(); it != entities.end(); it++) {
-                // Update state
                 mit = closeEntities.find(*it);
+                // Update state
                 (*it)->update(mit->second);
                 // Render the scene
                 (*it)->draw(window);
@@ -146,9 +157,11 @@ int main() {
                 (*it)->advance();
             }
 
-            info.setString(player->getInfo());
             player->getWeapon()->update();
             player->getWeapon()->draw(window);
+            player->drawHealthBar(window);
+            info.setString(player->getInfo());
+            //info.setString("Number of entities: " + std::to_string(entities.size()) + ", " + std::to_string(closeEntities.size()));
             window.draw(info);
 
             // Display on screen

@@ -185,7 +185,7 @@ void Ball::update(std::set<Entity *> *closeEntities) {
     // Add trail to ball
     sf::CircleShape *trailCirc = new sf::CircleShape(radius);
     //trailCirc->setFillColor(sf::Color(235, 205, 50, 100)); // gold color
-    trailCirc->setFillColor(sf::Color(color.r, color.g, color.b, 25));
+    trailCirc->setFillColor(sf::Color(color.r, color.g, color.b, 255));
     //trailCirc->setOrigin(radius, radius);
     trailCirc->setPosition(pos);
     if (trail.size() < 20) {
@@ -240,7 +240,7 @@ void Ball::draw(sf::RenderWindow &window) {
 
     float trailR;
     for (int i = 0; i < trail.size(); i++) {
-        trailR = log2(i) * radius / 3 > radius ? radius : log2(i) * radius / 4;
+        trailR = log2(i) * radius / 4 > radius ? radius : log2(i) * radius / 4;
         trail[i]->setRadius(trailR); // trail gets smaller at the end
         trail[i]->setOrigin(trailR, trailR);
         window.draw(*trail[i]);

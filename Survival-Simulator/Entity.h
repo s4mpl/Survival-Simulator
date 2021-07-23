@@ -52,4 +52,6 @@ class Entity {
         float currTime;
         float lastTime;
         float dt;
+
+        bool despawned;
 };

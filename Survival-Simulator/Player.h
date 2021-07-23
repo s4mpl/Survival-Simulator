@@ -22,6 +22,7 @@ class Player : public Entity {
         Player(int id, sf::Clock &clock);
         void update(std::set<Entity *> *closeEntities) final;
         void draw(sf::RenderWindow &window) final;
+        void drawHealthBar(sf::RenderWindow& window);
         std::string getInfo() const final;
         void setVelocity(sf::Vector2f v);
         void addVelocity(sf::Vector2f v);
