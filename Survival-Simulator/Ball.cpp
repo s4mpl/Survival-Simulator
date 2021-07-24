@@ -3,12 +3,11 @@
 #include "Utils.h"
 #include <typeinfo>
 
-const float xMax = 800;
+const float xMax = gameWidth;
 const float xMin = 0;
-const float yMax = 600;
+const float yMax = gameHeight;
 const float yMin = 0;
 const float vMax = 1000;
-std::string s = "not working";
 
 Ball::Ball(int id, float xPos, float yPos, float xVel, float yVel, float xAcc, float yAcc, float length, sf::Clock& clock, float elasticity, sf::Color color)
     : Entity{ id, xPos, yPos, xVel, yVel, xAcc, yAcc, length, clock, elasticity, color } {

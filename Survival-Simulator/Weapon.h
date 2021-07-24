@@ -14,7 +14,7 @@ class Weapon {
 	// sniper, shotgun, smg, rifle, dual pistols, smart pistol (bullet follows mouse), frag grenade, gauss rifle (charge up), homing rocket launcher
 	// explosive barrel (red-orange -> red color when close to exploding based on hp)
 	// pistol desc: Slow firing, but accurate and reliable, add bullet spread to smg and rifle
-    // shotgun loads shells 1 at a time and can shoot to cancel
+    // shotgun loads shells 1 at a time and can shoot to cancel, shotgun laser sight shows cone of spread (fades faster), sniper green laser sight doesn't fade
     // alt fire missile -- tracking, otherwise go straight
 
     protected:
@@ -41,6 +41,8 @@ class Weapon {
         sf::SoundBuffer defaultSoundBuffer;
         sf::SoundBuffer emptyGunSoundBuffer;
         int numSounds; // number of weapon firing sound variants
+
+        int weaponUpgrades; // each bit represents an upgrade -- 1 = larger magazine (>> 0), 2 = laser sight (>> 1), 4 = faster fire rate (>> 2), 8 = faster reload (>> 3), 16 = alt-fire (>> 4), etc.
 
         float currTime;
         float lastTime;

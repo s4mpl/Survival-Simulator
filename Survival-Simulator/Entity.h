@@ -4,6 +4,9 @@
 #include <cstdlib>
 #include <string>
 
+extern const float gameWidth;
+extern const float gameHeight;
+
 // General superclass for almost every object
 class Entity {
     protected:

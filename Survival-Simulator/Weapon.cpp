@@ -27,6 +27,8 @@ Weapon::Weapon(Entity *user, sf::Clock &clock) {
     reloadSpeed = 2.5f;
     reloadTime = currTime;
     reloading = false;
+
+    weaponUpgrades = 0;
 }
 
 void Weapon::update() {
@@ -48,6 +50,7 @@ void Weapon::update() {
         ammo += numReloaded;
         reloadTime = 0;
         reloading = false;
+        reloadSound.stop(); // for fast reloads
     }
 }
 

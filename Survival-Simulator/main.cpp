@@ -7,6 +7,11 @@
 #include "Player.h"
 
 int GLOBAL_ID_COUNT = 0;
+// Define some constants
+const float gameWidth = 1600;
+const float gameHeight = 1080;
+const float gravityAccel = 0;
+
 
 ////////////////////////////////////////////////////////////
 /// Entry point of application
@@ -15,11 +20,6 @@ int GLOBAL_ID_COUNT = 0;
 ///
 ////////////////////////////////////////////////////////////
 int main() {
-    // Define some constants
-    const float gameWidth = 800;
-    const float gameHeight = 600;
-    const float gravityAccel = 0;
-
     int i, j;
     bool paused = false;
 

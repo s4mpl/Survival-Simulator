@@ -1,9 +1,9 @@
 #include "LightBullet.h"
 #include "Utils.h"
 
-const float xMax = 800;
+const float xMax = gameWidth;
 const float xMin = 0;
-const float yMax = 600;
+const float yMax = gameHeight;
 const float yMin = 0;
 const float vMax = 1000;
 
