@@ -18,6 +18,8 @@ class Bullet : public Entity {
 		sf::SoundBuffer ricochetSoundBuffer;
 		sf::Sound ricochetSound;
 
+		float lifeSpan;
+
 	public:
 		Bullet(int id, sf::Vector2f spawnPos, sf::Vector2f targetDir, sf::Clock& clock);
 		void update(std::set<Entity *> *closeEntities) override;

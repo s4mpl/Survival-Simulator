@@ -20,7 +20,8 @@ Pistol::Pistol(Entity *user, sf::Clock clock) : Weapon{ user, clock } {
     if (!gunSoundBuffer2.loadFromFile("resources/pistol-shot-2.wav")) exit(-1);
     gunSound2.setBuffer(gunSoundBuffer2);
 
-    weaponUpgrades = 1+2+4+16;
+    weaponUpgrades = 1+2+4+8+16;
+    if (((weaponUpgrades >> 0) & 1) == 1) ammo = 15;
 }
 
 void Pistol::shoot(std::list<Entity *> *e) {
@@ -56,7 +57,7 @@ void Pistol::shoot(std::list<Entity *> *e) {
 }
 
 void Pistol::altfire(std::list<Entity *> *e) {
-    if ((weaponUpgrades >> 4) & 1 == 1)
+    if (((weaponUpgrades >> 4) & 1) == 1)
     if (!bursting && attackTime >= attackSpeed && !reloading) {
         entities = e;
         bursting = true;
@@ -66,9 +67,9 @@ void Pistol::altfire(std::list<Entity *> *e) {
 
 void Pistol::update() {
     int numReloaded = 0;
-    if ((weaponUpgrades >> 0) & 1 == 1) maxAmmo = 15;
-    if ((weaponUpgrades >> 2) & 1 == 1) attackSpeed = 0.45f;
-    if ((weaponUpgrades >> 3) & 1 == 1) reloadSpeed = 1.45f;
+    if (((weaponUpgrades >> 0) & 1) == 1) maxAmmo = 15;
+    if (((weaponUpgrades >> 2) & 1) == 1) attackSpeed = 0.45f;
+    if (((weaponUpgrades >> 3) & 1) == 1) reloadSpeed = 1.45f;
 
     // Get delta time
     lastTime = currTime;
@@ -115,7 +116,7 @@ void Pistol::draw(sf::RenderWindow& window) {
                     -sf::Vector2f{ (float)cos((userRotationAngle - 90) * M_PI / 180) * 11, (float)sin((userRotationAngle - 90) * M_PI / 180) * 11 } }; // perpendicular vector
 
     // Laser sight
-    if ((weaponUpgrades >> 1) & 1 == 1) {
+    if (((weaponUpgrades >> 1) & 1) == 1) {
         sf::Vertex line[] =
         {
             sf::Vertex(barrelPos, sf::Color::Red),

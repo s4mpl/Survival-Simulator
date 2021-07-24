@@ -8,8 +8,9 @@ const float yMin = 0;
 const float vMax = 1000;
 
 LightBullet::LightBullet(int id, sf::Vector2f spawnPos, sf::Vector2f targetDir, sf::Clock& clock) : Bullet{ id, spawnPos, targetDir, clock } {
-	health = maxHealth = 3; // can survive 3 rebounds
+	health = maxHealth = 3; // can survive up to 3 rebounds
 	color = sf::Color(235, 205, 50, 255);
+    elasticity = 0.33f;
 }
 
 void LightBullet::update(std::set<Entity*>* closeEntities) {
@@ -168,7 +169,8 @@ void LightBullet::update(std::set<Entity*>* closeEntities) {
         delete trailCirc;
     }
 
-    if (health <= 0) despawned = true;
+    lifeSpan -= dt;
+    if (health <= 0 || lifeSpan <= 0 || magnitude(vel) < 250.0f) despawned = true;
 }
 
 std::string LightBullet::getEntity() const {

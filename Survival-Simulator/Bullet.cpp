@@ -22,6 +22,8 @@ Bullet::Bullet(int id, sf::Vector2f spawnPos, sf::Vector2f targetDir, sf::Clock&
     ricochetSound.setBuffer(ricochetSoundBuffer);
     ricochetSound.setVolume(20);
     ricochetSound.setPitch(2);
+
+    lifeSpan = 6.0f;
 }
 
 void Bullet::update(std::set<Entity *> *closeEntities) {
@@ -177,6 +179,9 @@ void Bullet::update(std::set<Entity *> *closeEntities) {
         trail.pop_front();
         delete trailCirc;
     }
+
+    lifeSpan -= dt;
+    if (lifeSpan <= 0 || magnitude(vel) < 250.0f) despawned = true;
 }
 
 void Bullet::draw(sf::RenderWindow& window) {
