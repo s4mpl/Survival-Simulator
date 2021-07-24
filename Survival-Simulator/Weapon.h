@@ -51,6 +51,7 @@ class Weapon {
         virtual void update();
         virtual void draw(sf::RenderWindow &window);
         virtual void shoot(std::list<Entity *> *e);
+        virtual void altfire(std::list<Entity*>* e);
         virtual void reload();
         virtual std::string getInfo() const;
 

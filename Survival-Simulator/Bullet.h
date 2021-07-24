@@ -1,5 +1,6 @@
 #pragma once
 #include "Entity.h"
+#include <SFML/Audio.hpp>
 #include <deque>
 
 class Bullet : public Entity {
@@ -12,7 +13,10 @@ class Bullet : public Entity {
 	protected:
 		float damage;
 		sf::Vector2f targetDir;
-		std::deque<sf::CircleShape*> trail;
+		std::deque<sf::CircleShape *> trail;
+
+		sf::SoundBuffer ricochetSoundBuffer;
+		sf::Sound ricochetSound;
 
 	public:
 		Bullet(int id, sf::Vector2f spawnPos, sf::Vector2f targetDir, sf::Clock& clock);

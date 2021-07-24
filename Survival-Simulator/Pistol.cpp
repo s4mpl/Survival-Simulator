@@ -1,7 +1,7 @@
 #define _USE_MATH_DEFINES
 #include "Pistol.h"
 #include "Utils.h"
-#include "Bullet.h"
+#include "LightBullet.h"
 
 extern int GLOBAL_ID_COUNT;
 
@@ -13,6 +13,9 @@ Pistol::Pistol(Entity *user, sf::Clock clock) : Weapon{ user, clock } {
     attackSpeed = 0.75f;
     reloadSpeed = 2.5f;
     numSounds = 2;
+
+    bursting = false;
+    burstFired = 0;
 
     if (!gunSoundBuffer2.loadFromFile("resources/pistol-shot-2.wav")) exit(-1);
     gunSound2.setBuffer(gunSoundBuffer2);
@@ -26,7 +29,7 @@ void Pistol::shoot(std::list<Entity *> *e) {
 
     if (attackTime >= attackSpeed && !reloading) {
         if (ammo > 0) {
-            e->push_back(new Bullet(GLOBAL_ID_COUNT, barrelPos, userRelPos, c));
+            e->push_back(new LightBullet(GLOBAL_ID_COUNT, barrelPos, userRelPos, c));
             switch (rand() % numSounds) {
                 case 0:
                     defaultSound.play();
@@ -39,10 +42,54 @@ void Pistol::shoot(std::list<Entity *> *e) {
 
             attackTime = 0;
             ammo--;
+            if (bursting) burstFired++; // put here to prevent bug where shooting and bursting at the same time would allow the auto-shoot on left-click to shoot all bullets in one burst
             if (ammo < 1) reload();
         }
         else {
             emptyGunSound.play();
+            attackTime = 0;
+        }
+    }
+}
+
+void Pistol::altfire(std::list<Entity *> *e) {
+    if (!bursting && attackTime >= attackSpeed && !reloading) {
+        entities = e;
+        bursting = true;
+        burstFired = 0;
+    }
+}
+
+void Pistol::update() {
+    int numReloaded = 0;
+
+    // Get delta time
+    lastTime = currTime;
+    currTime = c.getElapsedTime().asSeconds();
+    dt = currTime - lastTime;
+
+    attackTime += dt;
+    reloadTime += dt;
+    if (!reloading) reloadTime = 0; // for the reload bar
+    if (attackTime > attackSpeed) attackTime = attackSpeed; // for the attack bar
+
+    if (reloading && reloadTime >= reloadSpeed) {
+        numReloaded = totalAmmo < maxAmmo - ammo ? totalAmmo : maxAmmo - ammo; // give the lesser of the two
+        totalAmmo -= numReloaded;
+        ammo += numReloaded;
+        reloadTime = 0;
+        reloading = false;
+    }
+
+    if (bursting) {
+        if (burstFired < 3 && !reloading) {
+            // If the shot would not be successful, advance the timer -- should fire about once every 3 frames
+            if (attackTime >= attackSpeed) shoot(entities);
+            else attackTime += attackSpeed / 3;
+        }
+        // Reset burst upon reload
+        else {
+            bursting = false;
             attackTime = 0;
         }
     }

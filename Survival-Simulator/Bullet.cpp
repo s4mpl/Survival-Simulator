@@ -6,17 +6,22 @@ const float xMax = 800;
 const float xMin = 0;
 const float yMax = 600;
 const float yMin = 0;
-const float vMax = 1000;
+const float vMax = 2000;
 
 Bullet::Bullet(int id, sf::Vector2f spawnPos, sf::Vector2f targetDir, sf::Clock& clock) : Entity{ id, clock } {
     pos = spawnPos;
 	targetDir = unit(targetDir);
-    vel = unit(targetDir) * 750.0f;
+    vel = unit(targetDir) * 1000.0f;
 	acc = unit(targetDir) * 10.0f;
 	elasticity = 0.8;
 	color = sf::Color::Black;
 	length = 2.5;
 	mass = pow(length, 2);
+
+    if (!ricochetSoundBuffer.loadFromFile("resources/bullet-ricochet.wav")) exit(-1);
+    ricochetSound.setBuffer(ricochetSoundBuffer);
+    ricochetSound.setVolume(20);
+    ricochetSound.setPitch(2);
 }
 
 void Bullet::update(std::set<Entity *> *closeEntities) {
@@ -129,6 +134,7 @@ void Bullet::update(std::set<Entity *> *closeEntities) {
 
         if (p1Col.x + length > xMax || p1Col.x - length < xMin) {
             // Handle the balls at this timestep
+            ricochetSound.play();
             dt *= colTime;
             pos.x = p1Col.x;
 
@@ -143,6 +149,7 @@ void Bullet::update(std::set<Entity *> *closeEntities) {
 
         if (p1Col.y + length > yMax || p1Col.y - length < yMin) {
             // Handle the balls at this timestep
+            ricochetSound.play();
             dt *= colTime;
             pos.y = p1Col.y;
 

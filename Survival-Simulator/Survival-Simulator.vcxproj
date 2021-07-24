@@ -147,6 +147,7 @@
   <ItemGroup>
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="Entity.cpp" />
+    <ClCompile Include="LightBullet.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Pistol.cpp" />
     <ClCompile Include="Player.cpp" />

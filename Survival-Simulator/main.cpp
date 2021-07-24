@@ -79,6 +79,10 @@ int main() {
                 paused = !paused;
                 player->damageEntity(-100);
             }
+            /* Alt-fire on right-click without auto-click
+            if ((event.type == sf::Event::MouseButtonPressed) && (event.mouseButton.button == sf::Mouse::Right)) {
+                player->getWeapon()->altfire(&entities);
+            }*/
         }
 
         if (!paused) {
@@ -101,9 +105,13 @@ int main() {
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::R)) {
                 player->getWeapon()->reload();
             }
-            // Shoot on left click
+            // Shoot on left-click
             if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
                 player->getWeapon()->shoot(&entities);
+            }
+            // Alt-fire on right-click
+            if (sf::Mouse::isButtonPressed(sf::Mouse::Right)) {
+                player->getWeapon()->altfire(&entities);
             }
 
             sf::Vector2i mousePos = sf::Mouse::getPosition(window);

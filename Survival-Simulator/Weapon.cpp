@@ -114,7 +114,6 @@ void Weapon::shoot(std::list<Entity *> *e) {
 
     if (attackTime >= attackSpeed && !reloading) {
         if (ammo > 0) {
-            // change to new Bullet(Vector2f spawnPos, Vector2f targetPos)
             e->push_back(new Ball(GLOBAL_ID_COUNT, barrelPos.x, barrelPos.y, unit(userRelPos).x * 700, unit(userRelPos).y * 700, 0, 0, 2.5, this->c, 0, sf::Color(235, 205, 50, 255)));
             switch (rand() % numSounds) {
                 case 0:
@@ -134,6 +133,8 @@ void Weapon::shoot(std::list<Entity *> *e) {
         }
     }
 }
+
+void Weapon::altfire(std::list<Entity *> *e) {}
 
 void Weapon::reload() {
     if (ammo < maxAmmo && !reloading && totalAmmo > 0) {
