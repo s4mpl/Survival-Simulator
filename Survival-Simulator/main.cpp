@@ -25,7 +25,7 @@ int main() {
 
     // Create the window of the application
     sf::RenderWindow window(sf::VideoMode(gameWidth, gameHeight, 32), "Physics Test",
-                            sf::Style::Titlebar | sf::Style::Close);
+                            sf::Style::None);
     window.setVerticalSyncEnabled(true);
     sf::Cursor cursor;
     if (cursor.loadFromSystem(sf::Cursor::Cross)) window.setMouseCursor(cursor);
@@ -74,18 +74,21 @@ int main() {
                 window.close();
                 break;
             }
-            // Pause on escape key
-            if ((event.type == sf::Event::KeyPressed) && (event.key.code == sf::Keyboard::Escape)) {
+            // Pause on escape key release
+            if ((event.type == sf::Event::KeyReleased) && (event.key.code == sf::Keyboard::Escape)) {
                 paused = !paused;
-                player->damageEntity(-100);
+                //player->damageEntity(-100);
             }
             /* Alt-fire on right-click without auto-click
             if ((event.type == sf::Event::MouseButtonPressed) && (event.mouseButton.button == sf::Mouse::Right)) {
                 player->getWeapon()->altfire(&entities);
             }*/
         }
-
-        if (!paused) {
+        // Q to quit while paused
+        if (paused) {
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q)) { window.close(); paused = !paused; }
+        }
+        else {
             // Clear the window
             window.clear(sf::Color(175, 175, 175, 100));
 
