@@ -1,5 +1,7 @@
+#define _USE_MATH_DEFINES
 #include "Pistol.h"
 #include "Utils.h"
+#include "Bullet.h"
 
 extern int GLOBAL_ID_COUNT;
 
@@ -24,8 +26,7 @@ void Pistol::shoot(std::list<Entity *> *e) {
 
     if (attackTime >= attackSpeed && !reloading) {
         if (ammo > 0) {
-            // change to new Bullet(Vector2f spawnPos, Vector2f targetPos)
-            e->push_back(new Ball(GLOBAL_ID_COUNT, barrelPos.x, barrelPos.y, unit(userRelPos).x * 700, unit(userRelPos).y * 700, 0, 0, 2.5, this->c, 1, sf::Color(235, 205, 50, 255)));
+            e->push_back(new Bullet(GLOBAL_ID_COUNT, barrelPos, userRelPos, c));
             switch (rand() % numSounds) {
                 case 0:
                     defaultSound.play();
@@ -45,6 +46,20 @@ void Pistol::shoot(std::list<Entity *> *e) {
             attackTime = 0;
         }
     }
+}
+
+void Pistol::draw(sf::RenderWindow& window) {
+    // Weapon
+    sf::RectangleShape pistol({ 20, 6 });
+    pistol.setOrigin({ -userRadius + 4, -8 });
+    pistol.setPosition(userPos);
+    pistol.setRotation(userRotationAngle);
+    pistol.setFillColor(sf::Color(45, 45, 45, 255));
+    window.draw(pistol);
+    barrelPos = { userPos + sf::Vector2f{ unit(userRelPos).x * (userRadius + 16), unit(userRelPos).y * (userRadius + 16) }
+                    -sf::Vector2f{ (float)cos((userRotationAngle - 90) * M_PI / 180) * 11, (float)sin((userRotationAngle - 90) * M_PI / 180) * 11 } }; // perpendicular vector
+
+    Weapon::draw(window);
 }
 
 std::string Pistol::getInfo() const {

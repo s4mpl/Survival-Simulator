@@ -2,6 +2,6 @@
 #include "Ball.h"
 #include "Bullet.h"
 
-class LightBullet : public Bullet, public Ball {
+class LightBullet : public Bullet {
 
 };

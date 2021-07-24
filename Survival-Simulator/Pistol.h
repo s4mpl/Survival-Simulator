@@ -8,6 +8,7 @@ class Pistol : public Weapon {
 	public:
 		Pistol(Entity *user, sf::Clock clock);
 		void shoot(std::list<Entity *> *e) override;
+		void draw(sf::RenderWindow& window) override;
 		std::string getInfo() const override;
 
 		sf::Sound gunSound2;

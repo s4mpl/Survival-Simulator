@@ -77,7 +77,7 @@ int main() {
             // Pause on escape key
             if ((event.type == sf::Event::KeyPressed) && (event.key.code == sf::Keyboard::Escape)) {
                 paused = !paused;
-                player->damagePlayer(-100);
+                player->damageEntity(-100);
             }
         }
 

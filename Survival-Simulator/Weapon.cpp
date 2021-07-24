@@ -57,16 +57,6 @@ void Weapon::draw(sf::RenderWindow &window) {
     userRelPos = user->getRelativePosition();
     userRotationAngle = user->getRotationAngle();
 
-    // Weapon
-    sf::RectangleShape pistol({ 20, 6 });
-    pistol.setOrigin({ -userRadius + 4, -8 });
-    pistol.setPosition(userPos);
-    pistol.setRotation(userRotationAngle);
-    pistol.setFillColor(sf::Color(45, 45, 45, 255));
-    window.draw(pistol);
-    barrelPos = { userPos + sf::Vector2f{ unit(userRelPos).x * (userRadius + 16), unit(userRelPos).y * (userRadius + 16) }
-                    -sf::Vector2f{ (float)cos((userRotationAngle - 90) * M_PI / 180) * 11, (float)sin((userRotationAngle - 90) * M_PI / 180) * 11 } }; // perpendicular vector
-
     // Reloading bar / reloading progress
     sf::RectangleShape rb({ 102, 4 });
     rb.setPosition(5, 65);

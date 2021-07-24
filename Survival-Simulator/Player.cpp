@@ -137,11 +137,6 @@ void Player::addVelocity(sf::Vector2f v) {
     vel += v;
 }
 
-void Player::damagePlayer(float amount) {
-    health -= amount;
-    if (health < 0) health = 0;
-}
-
 void Player::rotateTo(sf::Vector2i pos) {
     relativePos = { (float)pos.x - this->pos.x, (float)pos.y - this->pos.y };
     if (relativePos.x != 0) rotationAngle = atan(relativePos.y / relativePos.x) * 180 / M_PI;

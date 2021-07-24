@@ -50,16 +50,16 @@ void Ball::update(std::set<Entity *> *closeEntities) {
         if (id == (*other)->getId()) continue;
 
         if (getShape() == "circle" && (*other)->getShape() == "circle") {
-            Ball *otherB = (Ball *)(*other);
+            Entity *otherE = (*other);
             // Continuous collision detection
             p1Old = pos;
-            p2Old = otherB->pos;
+            p2Old = otherE->getPosition();
             p1New = p1Old + vel * dt;
             p2New = p2Old + vel * dt;
             v1Old = vel;
-            v2Old = otherB->vel;
+            v2Old = otherE->getVelocity();
             mag = magnitude(vel);
-            otherMag = magnitude(otherB->vel);
+            otherMag = magnitude(otherE->getVelocity());
 
             for (colTime = 0; colTime <= 1; colTime += 0.001f) { // Could be better
                 // Interpolate positions
@@ -67,34 +67,34 @@ void Ball::update(std::set<Entity *> *closeEntities) {
                 p2Col = p2Old + (p2New - p2Old) * colTime;
 
                 // If distance <= combined radii, they are intersecting
-                overlap = radius + otherB->radius - distance(p1Col, p2Col);
+                overlap = radius + otherE->getLength() - distance(p1Col, p2Col);
 
                 if (overlap > 0) {
                     // Prevent collisions from happening again between these two balls before they are updated again
-                    if (otherB->collided != this) {
+                    if (otherE->collided != this) {
                         collided = *other;
-                        otherB->collided = this;
+                        otherE->collided = this;
 
                         // Handle the balls at this timestep
                         dt *= colTime;
-                        otherB->dt *= colTime;
+                        otherE->dt *= colTime;
                         pos = p1Col;
-                        otherB->pos = p2Col;
+                        otherE->getPosition() = p2Col;
 
-                        overlap = radius + otherB->radius - distance(p1Col, p2Col);
+                        overlap = radius + otherE->getLength() - distance(p1Col, p2Col);
                         if (overlap >= 0) {
                             // Separate the balls using half the overlap times the direction of old velocity (https://youtu.be/guWIF87CmBg?t=854)
                             // It's not enough to separate in all cases for some reason (or it is doing the colision on both balls from each ball?), so multiply by some constant for now
                             if (v1Old != sf::Vector2f{ 0, 0 } && elasticity != 0) pos -= unit(v1Old) * (/*4 / elasticity **/ overlap / 2);
-                            if (v2Old != sf::Vector2f{ 0, 0 } && otherB->elasticity != 0) otherB->pos -= unit(v2Old) * (/*4 / (*other)->elasticity **/ overlap / 2);
+                            if (v2Old != sf::Vector2f{ 0, 0 } && otherE->getElasticity() != 0) otherE->setPosition(otherE->getPosition() - unit(v2Old) * (/*4 / (*other)->elasticity **/ overlap / 2));
                         }
 
                         // Use old velocities in both calculations or else it updates one before the other
-                        v1New = elasticity * computeCollision(pos, otherB->pos, v1Old, v2Old, mass, otherB->mass);
-                        v2New = otherB->elasticity * computeCollision(otherB->pos, pos, v2Old, v1Old, otherB->mass, mass);
+                        v1New = elasticity * computeCollision(pos, otherE->getPosition(), v1Old, v2Old, mass, otherE->getMass());
+                        v2New = otherE->getElasticity() * computeCollision(otherE->getPosition(), pos, v2Old, v1Old, otherE->getMass(), mass);
 
                         vel = v1New;
-                        otherB->vel = v2New;
+                        otherE->setVelocity(v2New);
 
                         if (mag > 7) {
                             // Update sound of collision relative to current state / mass
@@ -102,15 +102,16 @@ void Ball::update(std::set<Entity *> *closeEntities) {
                             ballSound.play();
                         }
                         if (otherMag > 7) {
-                            if (otherB->id != -1) {
+                            if (otherE->getEntity() == "Ball") {
+                                Ball *b = (Ball *)otherE;
                                 // Update sound of collision relative to current state / mass
-                                otherB->ballSound.setVolume(0.01 * otherMag * mass);
-                                otherB->ballSound.play();
+                                b->ballSound.setVolume(0.01 * otherMag * mass);
+                                b->ballSound.play();
                             }
                         }
-                        if (otherB->id == -1) {
+                        if (otherE->getId() == -1) {
                             // Health lost is proportional to how hard the collision was (force against the player)
-                            ((Player *)(*other))->damagePlayer(magnitude(otherB->vel) / 10);
+                            (*other)->damageEntity(magnitude(otherE->getVelocity()) / 10);
                         }
                     }
 
@@ -119,12 +120,12 @@ void Ball::update(std::set<Entity *> *closeEntities) {
             }
 
             // If still inside each other, separate them more and check again next frame
-            overlap = radius + otherB->radius - distance(p1Col, p2Col);
+            overlap = radius + otherE->getLength() - distance(p1Col, p2Col);
             if (overlap > 0) {
                 // Separate the balls using half the overlap times the direction of old velocity (https://youtu.be/guWIF87CmBg?t=854)
                 // It's not enough to separate in all cases for some reason (or it is doing the colision on both balls from each ball?), so multiply by some constant for now
                 if (v1Old != sf::Vector2f{ 0, 0 } && elasticity != 0) pos -= unit(v1Old) * (/*4 / elasticity **/ overlap / 2);
-                if (v2Old != sf::Vector2f{ 0, 0 } && otherB->elasticity != 0) otherB->pos -= unit(v2Old) * (/*4 / otherB->elasticity **/ overlap / 2);
+                if (v2Old != sf::Vector2f{ 0, 0 } && otherE->getElasticity() != 0) otherE->setPosition(otherE->getPosition() - unit(v2Old) * (/*4 / otherE->elasticity **/ overlap / 2));
             }
             else {
                 // If the other ball already handled the collision, still get rid of its pointer from closeEntities

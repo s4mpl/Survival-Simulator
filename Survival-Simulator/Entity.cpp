@@ -13,6 +13,7 @@ Entity::Entity(int id, sf::Clock& clock) {
     this->id = id;
 
     c = clock;
+    currTime = c.getElapsedTime().asSeconds();
 
     despawned = false;
 }
@@ -120,7 +121,7 @@ void Entity::update(std::set<Entity *> *closeEntities) {
 
                         if ((*other)->id == -1) {
                             // Health lost is proportional to how hard the collision was (force against the player)
-                            ((Player*)(*other))->damagePlayer(magnitude((*other)->vel) / 10);
+                            (*other)->damageEntity(magnitude((*other)->vel) / 10);
                         }
                     }
 
@@ -216,6 +217,14 @@ float Entity::getLength() const {
     return length;
 }
 
+float Entity::getMass() const {
+    return mass;
+}
+
+float Entity::getElasticity() const {
+    return elasticity;
+}
+
 float Entity::getRotationAngle() const {
     return rotationAngle;
 }
@@ -240,4 +249,9 @@ std::string Entity::getEntity() const {
 
 std::string Entity::getShape() const {
     return "undefined";
+}
+
+void Entity::damageEntity(float amount) {
+    health -= amount;
+    if (health < 0) health = 0;
 }

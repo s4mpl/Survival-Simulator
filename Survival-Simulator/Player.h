@@ -10,8 +10,6 @@ class Player : public Entity {
 	protected:
         float radius;
 
-        float health;
-        float maxHealth;
         //sf::Vector2f relativePos; // player position relative to the mouse
         
         sf::Texture texture;
@@ -26,7 +24,6 @@ class Player : public Entity {
         std::string getInfo() const final;
         void setVelocity(sf::Vector2f v);
         void addVelocity(sf::Vector2f v);
-        void damagePlayer(float amount);
         void rotateTo(sf::Vector2i pos);
         std::string getEntity() const override;
         std::string getShape() const override;
