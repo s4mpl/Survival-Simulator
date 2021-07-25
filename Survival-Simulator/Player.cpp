@@ -21,7 +21,7 @@ Player::Player(int id, sf::Clock& clock) : Entity{ id, clock } {
     mass = pow(radius, 2);
     elasticity = 1;
 
-    weapon = new Pistol(this, clock, 0);
+    weapon = new SmartPistol(this, clock, 1+2+4+8+16);
 
     if (!texture.loadFromFile("resources/eyes.png")) exit(-1);
 }

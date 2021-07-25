@@ -3,6 +3,7 @@
 #include <deque>
 
 // Class for general circular game objects but also standalone bouncy ball entity
+
 class Ball : public Entity {
     protected:
         float radius;

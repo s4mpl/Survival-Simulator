@@ -8,6 +8,7 @@ extern const float gameWidth;
 extern const float gameHeight;
 
 // General superclass for almost every object
+
 class Entity {
     protected:
         int id;
@@ -25,7 +26,7 @@ class Entity {
         sf::Color color;
 
         float rotationAngle;
-        sf::Vector2f relativePos;
+        sf::Vector2f relativePos; // this entity's position relative to some other entity or the mouse for the player -- used for AI aiming
 
         float health;
         float maxHealth;

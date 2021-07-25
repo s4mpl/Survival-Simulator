@@ -7,6 +7,10 @@ class SmartBullet : public Bullet {
 		sf::RenderWindow *window;
 		int upgrades;
 
+		sf::SoundBuffer sonarSoundBuffer;
+		sf::Sound sonarSound;
+		float soundTimer;
+
 	public:
 		SmartBullet(int id, sf::Vector2f spawnPos, sf::Vector2f targetDir, sf::Clock& clock, sf::RenderWindow& window, int upgrades);
 		void update(std::set<Entity*>* closeEntities) final;

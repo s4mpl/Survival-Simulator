@@ -162,9 +162,11 @@
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="LightBullet.h" />
+    <ClInclude Include="Line.h" />
     <ClInclude Include="Pistol.h" />
     <ClInclude Include="Player.h" />
     <ClCompile Include="Utils.cpp" />
+    <ClInclude Include="Rectangle.h" />
     <ClInclude Include="SmartBullet.h" />
     <ClInclude Include="SmartPistol.h" />
     <ClInclude Include="Utils.h" />

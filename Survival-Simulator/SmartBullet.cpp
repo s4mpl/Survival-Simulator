@@ -18,6 +18,11 @@ SmartBullet::SmartBullet(int id, sf::Vector2f spawnPos, sf::Vector2f targetDir, 
     vel = unit(targetDir) * 50.0f;
     acc = sf::Vector2f{ 0, 0 };
     length = 4.0f;
+
+    if (!sonarSoundBuffer.loadFromFile("resources/smartbullet.wav")) exit(-1);
+    sonarSound.setBuffer(sonarSoundBuffer);
+    sonarSound.setVolume(10);
+    soundTimer = 4.2f;
 }
 
 void SmartBullet::update(std::set<Entity*>* closeEntities) {
@@ -29,6 +34,12 @@ void SmartBullet::update(std::set<Entity*>* closeEntities) {
     lastTime = currTime;
     currTime = c.getElapsedTime().asSeconds();
     dt = currTime - lastTime;
+
+    soundTimer += dt;
+    if (soundTimer >= 5.0f) {
+        sonarSound.play();
+        soundTimer = 0;
+    }
 
     // Update velocity
     mousePos = sf::Mouse::getPosition(*window);
@@ -184,7 +195,7 @@ void SmartBullet::update(std::set<Entity*>* closeEntities) {
     }
 
     lifeSpan -= dt;
-    if (health <= 0 || lifeSpan <= 0) despawned = true;
+    if (health <= 0 || lifeSpan <= 0) { despawned = true; sonarSound.stop(); }
 }
 
 void SmartBullet::draw(sf::RenderWindow& window) {
