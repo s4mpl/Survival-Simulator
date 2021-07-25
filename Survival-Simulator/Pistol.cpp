@@ -20,7 +20,6 @@ Pistol::Pistol(Entity *user, sf::Clock clock, int weaponUpgrades) : Weapon{ user
     if (!gunSoundBuffer2.loadFromFile("resources/pistol-shot-2.wav")) exit(-1);
     gunSound2.setBuffer(gunSoundBuffer2);
 
-    weaponUpgrades = 1+2+4+8+16;
     if (((weaponUpgrades >> 0) & 1) == 1) ammo = 15;
 }
 

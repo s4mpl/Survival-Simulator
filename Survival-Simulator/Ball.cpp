@@ -153,6 +153,7 @@ void Ball::update(std::set<Entity *> *closeEntities) {
             }
 
             vel.x = -vel.x * elasticity;
+            vel.y *= elasticity;
 
             // Get ball out of edge
             if (pos.x + radius > xMax) pos.x = xMax - radius;
@@ -173,6 +174,7 @@ void Ball::update(std::set<Entity *> *closeEntities) {
             }
 
             vel.y = -vel.y * elasticity;
+            vel.x *= elasticity;
 
             // Get ball out of edge
             if (pos.y + radius > yMax) pos.y = yMax - radius;
@@ -196,36 +198,6 @@ void Ball::update(std::set<Entity *> *closeEntities) {
         trail.pop_front();
         delete trailCirc;
     }
-
-    //pos += vel * dt;
-
-    /* Update position if not out-of-bounds, else collide with border
-    if (!(pos.x + radius + vel.x * dt > xMax || pos.x - radius + vel.x * dt < 0)) pos.x += vel.x * dt;
-    else {
-        // Get ball out of edge
-        if (pos.x + radius + vel.x * dt > xMax) pos.x = xMax - radius;
-        if (pos.x - radius + vel.x * dt < 0) pos.x = 0 + radius;
-
-        if (fabs(vel.x) > 5) {
-            // Update sound of collision relative to current state / mass
-            ballSound.setVolume(0.01 * magnitude(vel) * mass);
-            ballSound.play();
-        }
-        vel.x = -vel.x * elasticity;
-    }
-    if (!(pos.y + radius + vel.y * dt > yMax || pos.y - radius + vel.y * dt < 0)) pos.y += vel.y * dt;
-    else {
-        // Get ball out of edge
-        if (pos.y + radius + vel.y * dt > yMax) pos.y = yMax - radius;
-        if (pos.y - radius + vel.y * dt < 0) pos.y = 0 + radius;
-
-        if (fabs(vel.y) > 5) {
-            // Update sound of collision relative to current state / mass
-            ballSound.setVolume(0.01 * magnitude(vel) * mass);
-            ballSound.play();
-        }
-        vel.y = -vel.y * elasticity;
-    }*/
 }
 
 void Ball::draw(sf::RenderWindow &window) {

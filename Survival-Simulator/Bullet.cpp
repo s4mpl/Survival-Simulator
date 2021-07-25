@@ -141,6 +141,7 @@ void Bullet::update(std::set<Entity *> *closeEntities) {
             pos.x = p1Col.x;
 
             vel.x = -vel.x * elasticity;
+            vel.y *= elasticity;
 
             // Get ball out of edge
             if (pos.x + length > xMax) pos.x = xMax - length;
@@ -156,6 +157,7 @@ void Bullet::update(std::set<Entity *> *closeEntities) {
             pos.y = p1Col.y;
 
             vel.y = -vel.y * elasticity;
+            vel.x *= elasticity;
 
             // Get ball out of edge
             if (pos.y + length > yMax) pos.y = yMax - length;

@@ -21,7 +21,7 @@ Player::Player(int id, sf::Clock& clock) : Entity{ id, clock } {
     mass = pow(radius, 2);
     elasticity = 1;
 
-    weapon = new SmartPistol(this, clock, 0);
+    weapon = new Pistol(this, clock, 0);
 
     if (!texture.loadFromFile("resources/eyes.png")) exit(-1);
 }
@@ -66,6 +66,7 @@ void Player::update(std::set<Entity *> *closeEntities) {
             pos.x = p1Col.x;
 
             vel.x = -vel.x * elasticity;
+            vel.y *= elasticity;
 
             // Get ball out of edge
             if (pos.x + radius > xMax) pos.x = xMax - radius;
@@ -80,6 +81,7 @@ void Player::update(std::set<Entity *> *closeEntities) {
             pos.y = p1Col.y;
 
             vel.y = -vel.y * elasticity;
+            vel.x *= elasticity;
 
             // Get ball out of edge
             if (pos.y + radius > yMax) pos.y = yMax - radius;

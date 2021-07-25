@@ -158,6 +158,7 @@ void Entity::update(std::set<Entity *> *closeEntities) {
             pos.x = p1Col.x;
 
             vel.x = -vel.x * elasticity;
+            vel.y *= elasticity;
 
             // Get entity out of edge
             if (pos.x + length > xMax) pos.x = xMax - length;
@@ -172,6 +173,7 @@ void Entity::update(std::set<Entity *> *closeEntities) {
             pos.y = p1Col.y;
 
             vel.y = -vel.y * elasticity;
+            vel.x *= elasticity;
 
             // Get entity out of edge
             if (pos.y + length > yMax) pos.y = yMax - length;
