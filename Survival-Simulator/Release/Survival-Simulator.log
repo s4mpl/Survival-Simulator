@@ -1,10 +1,7 @@
-﻿  main.cpp
-C:\Users\brandan\source\repos\Survival-Simulator\Survival-Simulator\main.cpp(27,54): warning C4244: 'argument': conversion from 'const float' to 'unsigned int', possible loss of data
-C:\Users\brandan\source\repos\Survival-Simulator\Survival-Simulator\main.cpp(27,43): warning C4244: 'argument': conversion from 'const float' to 'unsigned int', possible loss of data
-C:\Users\brandan\source\repos\Survival-Simulator\Survival-Simulator\main.cpp(23,12): warning C4101: 'j': unreferenced local variable
-C:\Users\brandan\source\repos\Survival-Simulator\Survival-Simulator\main.cpp(23,9): warning C4101: 'i': unreferenced local variable
+﻿  SmartBullet.cpp
+C:\Users\brandan\source\repos\Survival-Simulator\Survival-Simulator\SmartBullet.cpp(167,54): warning C4244: 'argument': conversion from 'float' to 'sf::Uint8', possible loss of data
   Generating code
-  1 of 569 functions ( 0.2%) were compiled, the rest were copied from previous compilation.
+  1 of 578 functions ( 0.2%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
     0 functions had inline decision re-evaluated but remain unchanged
   Finished generating code

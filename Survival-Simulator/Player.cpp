@@ -5,6 +5,7 @@
 #include <math.h>
 #include <list>
 #include "Pistol.h"
+#include "SmartPistol.h"
 
 const float xMax = gameWidth;
 const float xMin = 0;
@@ -20,7 +21,7 @@ Player::Player(int id, sf::Clock& clock) : Entity{ id, clock } {
     mass = pow(radius, 2);
     elasticity = 1;
 
-    weapon = new Pistol(this, clock);
+    weapon = new SmartPistol(this, clock, 0);
 
     if (!texture.loadFromFile("resources/eyes.png")) exit(-1);
 }

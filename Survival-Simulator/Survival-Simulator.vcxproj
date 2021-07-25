@@ -151,6 +151,8 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Pistol.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="SmartBullet.cpp" />
+    <ClCompile Include="SmartPistol.cpp" />
     <ClCompile Include="Weapon.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -163,6 +165,8 @@
     <ClInclude Include="Pistol.h" />
     <ClInclude Include="Player.h" />
     <ClCompile Include="Utils.cpp" />
+    <ClInclude Include="SmartBullet.h" />
+    <ClInclude Include="SmartPistol.h" />
     <ClInclude Include="Utils.h" />
     <ClInclude Include="Weapon.h" />
   </ItemGroup>

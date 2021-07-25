@@ -11,14 +11,19 @@ class Weapon {
 
     // Notes:
 	// weapon powerup idea: attack/move faster the lower your health is, also allow weapon to modify user's velocity (max is pistol(s) at default)
-	// sniper, shotgun, smg, rifle, dual pistols, smart pistol (bullet follows mouse), frag grenade, gauss rifle (charge up), homing rocket launcher
+	// sniper, shotgun, smg, rifle, dual pistols, smart pistol (bullet follows mouse), frag grenade, gauss rifle (charge up), homing rocket launcher (still continues in cursor direction)
 	// explosive barrel (red-orange -> red color when close to exploding based on hp)
 	// pistol desc: Slow firing, but accurate and reliable, add bullet spread to smg and rifle
     // shotgun loads shells 1 at a time and can shoot to cancel, shotgun laser sight shows cone of spread (fades faster), sniper green laser sight doesn't fade
     // alt fire missile -- tracking, otherwise go straight
+    /* For rocket launcher:
+    // Update acceleration (tracking mouse position)
+    sf::Vector2i mousePos = sf::Mouse::getPosition(*window);
+    acc = unit(sf::Vector2f{ mousePos.x - pos.x, mousePos.y - pos.y }) * 1000.0f;
+    */
 
     protected:
-        int id; // -1 = undef, 0 = pistol, 1 = ?
+        int id; // -1 = undefined, 0 = pistol, 1 = ?
         Entity *user;
         sf::Clock c;
 
@@ -49,7 +54,7 @@ class Weapon {
         float dt;
 
     public:
-        Weapon(Entity *user, sf::Clock &clock);
+        Weapon(Entity *user, sf::Clock &clock, int weaponUpgrades);
         virtual void update();
         virtual void draw(sf::RenderWindow &window);
         virtual void shoot(std::list<Entity *> *e);

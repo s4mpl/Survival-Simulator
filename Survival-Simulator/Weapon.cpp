@@ -5,7 +5,7 @@
 
 extern int GLOBAL_ID_COUNT;
 
-Weapon::Weapon(Entity *user, sf::Clock &clock) {
+Weapon::Weapon(Entity *user, sf::Clock &clock, int weaponUpgrades) {
 	this->user = user;
     c = clock;
 
@@ -28,7 +28,7 @@ Weapon::Weapon(Entity *user, sf::Clock &clock) {
     reloadTime = currTime;
     reloading = false;
 
-    weaponUpgrades = 0;
+    this->weaponUpgrades = weaponUpgrades;
 }
 
 void Weapon::update() {

@@ -5,12 +5,12 @@ const float xMax = gameWidth;
 const float xMin = 0;
 const float yMax = gameHeight;
 const float yMin = 0;
-const float vMax = 1000;
+const float vMax = 2000;
 
 LightBullet::LightBullet(int id, sf::Vector2f spawnPos, sf::Vector2f targetDir, sf::Clock& clock) : Bullet{ id, spawnPos, targetDir, clock } {
-	health = maxHealth = 3; // can survive up to 3 rebounds
+	health = maxHealth = 2; // can survive up to 1 rebound
 	color = sf::Color(235, 205, 50, 255);
-    elasticity = 0.33f;
+    elasticity = 0.2f;
 }
 
 void LightBullet::update(std::set<Entity*>* closeEntities) {
@@ -90,7 +90,7 @@ void LightBullet::update(std::set<Entity*>* closeEntities) {
 
                         if (otherE->getId() == -1) {
                             // Health lost is proportional to how hard the collision was (force against the player)
-                            (*other)->damageEntity(magnitude(otherE->getVelocity()) / 10);
+                            (*other)->damageEntity(magnitude(otherE->getVelocity()) / 2);
                         }
                     }
 
@@ -175,4 +175,8 @@ void LightBullet::update(std::set<Entity*>* closeEntities) {
 
 std::string LightBullet::getEntity() const {
 	return "LightBullet";
+}
+
+std::string LightBullet::getShape() const {
+    return "circle";
 }

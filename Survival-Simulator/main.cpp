@@ -140,6 +140,8 @@ int main() {
                     entitySet = new std::set<Entity *>();
                     closeEntities.insert(make_pair((*it), entitySet));
                 }
+                // Clear the set every iteration to avoid keeping despawned entity pointers
+                else mit->second->clear();
                 for (it2 = entities.begin(); it2 != entities.end(); it2++) {
                     if ((*it)->getId() == (*it2)->getId()) continue;
                     // Check "x-range" of each to see if it is within the "x-range" of another

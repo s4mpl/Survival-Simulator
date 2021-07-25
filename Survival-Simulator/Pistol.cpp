@@ -5,7 +5,7 @@
 
 extern int GLOBAL_ID_COUNT;
 
-Pistol::Pistol(Entity *user, sf::Clock clock) : Weapon{ user, clock } {
+Pistol::Pistol(Entity *user, sf::Clock clock, int weaponUpgrades) : Weapon{ user, clock, weaponUpgrades } {
     id = 0;
     ammo = 7;
     maxAmmo = 7;
@@ -119,7 +119,7 @@ void Pistol::draw(sf::RenderWindow& window) {
     if (((weaponUpgrades >> 1) & 1) == 1) {
         sf::Vertex line[] =
         {
-            sf::Vertex(barrelPos, sf::Color::Red),
+            sf::Vertex(barrelPos, sf::Color(255, 0, 0, 175)),
             sf::Vertex(barrelPos + 1000.0f * unit(userRelPos), sf::Color::Transparent)
         };
         window.draw(line, 2, sf::Lines);

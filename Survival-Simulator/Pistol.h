@@ -10,12 +10,12 @@ class Pistol : public Weapon {
 		int burstFired;
 
 	public:
-		Pistol(Entity *user, sf::Clock clock);
-		void shoot(std::list<Entity *> *e) override;
-		void altfire(std::list<Entity *> *e) override; // burst-fire mode
-		void update() override;
-		void draw(sf::RenderWindow& window) override;
-		std::string getInfo() const override;
+		Pistol(Entity *user, sf::Clock clock, int weaponUpgrades);
+		void shoot(std::list<Entity *> *e) final;
+		void altfire(std::list<Entity *> *e) final; // burst-fire mode
+		void update() final;
+		void draw(sf::RenderWindow& window) final;
+		std::string getInfo() const final;
 
 		sf::Sound gunSound2;
 };

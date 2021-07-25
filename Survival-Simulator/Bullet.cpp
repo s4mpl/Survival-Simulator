@@ -11,8 +11,8 @@ const float vMax = 2000;
 Bullet::Bullet(int id, sf::Vector2f spawnPos, sf::Vector2f targetDir, sf::Clock& clock) : Entity{ id, clock } {
     pos = spawnPos;
 	targetDir = unit(targetDir);
-    vel = unit(targetDir) * 1000.0f;
-	acc = unit(targetDir) * 10.0f;
+    vel = unit(targetDir) * 1500.0f;
+	acc = unit(targetDir) * -10.0f;
 	elasticity = 0.8;
 	color = sf::Color::Black;
 	length = 2.5;
@@ -23,7 +23,7 @@ Bullet::Bullet(int id, sf::Vector2f spawnPos, sf::Vector2f targetDir, sf::Clock&
     ricochetSound.setVolume(20);
     ricochetSound.setPitch(2);
 
-    lifeSpan = 6.0f;
+    lifeSpan = 3.0f;
 }
 
 void Bullet::update(std::set<Entity *> *closeEntities) {
@@ -209,5 +209,5 @@ std::string Bullet::getEntity() const {
 }
 
 std::string Bullet::getShape() const {
-    return "circle";
+    return "undefined";
 }
