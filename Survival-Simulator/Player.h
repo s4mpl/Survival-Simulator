@@ -15,6 +15,13 @@ class Player : public Entity {
         sf::Texture texture;
 
         class Weapon *weapon;
+        std::list<Weapon *> inventory;
+        std::list<Weapon *>::iterator invIt;
+
+        sf::SoundBuffer hurtSoundBuffer;
+        sf::Sound hurtSound;
+        sf::SoundBuffer deathSoundBuffer;
+        sf::Sound deathSound;
 
 	public:
         Player(int id, sf::Clock &clock);
@@ -28,4 +35,8 @@ class Player : public Entity {
         std::string getEntity() const override;
         std::string getShape() const override;
         class Weapon *getWeapon() const;
+        void damageEntity(float amount) override;
+
+        void inventoryNext();
+        void inventoryPrev();
 };

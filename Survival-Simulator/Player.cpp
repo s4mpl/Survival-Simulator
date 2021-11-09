@@ -6,6 +6,7 @@
 #include <list>
 #include "Pistol.h"
 #include "SmartPistol.h"
+#include "Line.h"
 
 const float xMax = gameWidth;
 const float xMin = 0;
@@ -21,14 +22,25 @@ Player::Player(int id, sf::Clock& clock) : Entity{ id, clock } {
     mass = pow(radius, 2);
     elasticity = 1;
 
-    weapon = new SmartPistol(this, clock, 1+2+4+8+16);
+    inventory.push_back(new Pistol(this, clock, 1 + 2 + 4 + 8 + 16));
+    inventory.push_back(new SmartPistol(this, clock, 1 + 2 + 4 + 8 + 16));
+    invIt = inventory.begin();
 
     if (!texture.loadFromFile("resources/eyes.png")) exit(-1);
+
+    if (!hurtSoundBuffer.loadFromFile("resources/player-hurt.wav")) exit(-1);
+    hurtSound.setBuffer(hurtSoundBuffer);
+    hurtSound.setVolume(20);
+    hurtSound.setPitch(0.85);
+    if (!deathSoundBuffer.loadFromFile("resources/player-death.wav")) exit(-1);
+    deathSound.setBuffer(deathSoundBuffer);
+    deathSound.setVolume(20);
 }
 
 void Player::update(std::set<Entity *> *closeEntities) {
     float overlap, mag, otherMag, colTime;
-    sf::Vector2f p1Old, p2Old, p1New, p2New, p1Col, p2Col, v1Old, v2Old;
+    sf::Vector2f p1Old, p2Old, p1New, p2New, p1Col, p2Col, v1Old, v2Old, p1, p2, p3, p4;
+    sf::Vector2f* out = new sf::Vector2f();
     collided = NULL;
 
     // Get delta time
@@ -39,6 +51,8 @@ void Player::update(std::set<Entity *> *closeEntities) {
     // Update velocity
     vel.x += acc.x * dt;
     vel.y += acc.y * dt;
+
+    weapon = (*invIt);
 
     // Max velocity
     if (vel.x > vMax) vel.x = vMax;
@@ -51,6 +65,22 @@ void Player::update(std::set<Entity *> *closeEntities) {
 
     if (health > maxHealth) health = maxHealth;
     if (health < 0) health = 0;
+
+    // Check if colliding with walls
+    for (std::set<Entity*>::iterator other = closeEntities->begin(); other != closeEntities->end(); other++) {
+        if (id == (*other)->getId()) continue;
+        if (getShape() == "circle" && (*other)->getShape() == "line") {
+            Line* l = (Line*)(*other);
+            p3 = l->getPos1();
+            p4 = l->getPos2();
+
+            if (LineCollision(pos, pos + vel * dt, p3, p4, out)) {
+                float lRotAngle = l->getRotationAngle();
+                pos = *out;
+                hurtSound.play();
+            }
+        }
+    }
 
     // Continuous border collision detection
     p1Old = pos;
@@ -111,13 +141,13 @@ void Player::drawHealthBar(sf::RenderWindow& window) {
     hb.setPosition(pos + sf::Vector2f{ 0, -1 - radius - 5 });
     hb.setOutlineColor(sf::Color::Black);
     hb.setOutlineThickness(-1);
-    sf::RectangleShape hp({ health / 2, 2 });
+    sf::RectangleShape hp({ (health * 50) / maxHealth, 2 });
     hp.setOrigin({ 26, 2 });
     hp.setPosition(pos + sf::Vector2f{ 1, -radius - 5 });
-    if (health >= 80) hp.setFillColor(sf::Color::Green);
-    else if (health >= 60) hp.setFillColor(sf::Color(150, 255, 0, 255));
-    else if (health >= 40) hp.setFillColor(sf::Color(255, 200, 0, 255));
-    else if (health >= 20) hp.setFillColor(sf::Color(255, 100, 0, 255));
+    if (health >= 0.8 * maxHealth) hp.setFillColor(sf::Color::Green);
+    else if (health >= 0.6 * maxHealth) hp.setFillColor(sf::Color(150, 255, 0, 255));
+    else if (health >= 0.4 * maxHealth) hp.setFillColor(sf::Color(255, 200, 0, 255));
+    else if (health >= 0.2 * maxHealth) hp.setFillColor(sf::Color(255, 100, 0, 255));
     else hp.setFillColor(sf::Color::Red);
 
     window.draw(hb);
@@ -156,4 +186,29 @@ std::string Player::getShape() const {
 
 Weapon *Player::getWeapon() const {
     return weapon;
+}
+
+void Player::damageEntity(float amount) {
+    health -= amount;
+    if (amount > 0) {
+        if (health <= 0) { health = 0; deathSound.play(); }
+        else hurtSound.play();
+    }
+    else if (amount < 0) {
+        //healSound.play();
+    }
+}
+
+void Player::inventoryNext() {
+    if (!(*invIt)->reloading) {
+        invIt++;
+        if (invIt == inventory.end()) invIt = inventory.begin();
+    }
+}
+
+void Player::inventoryPrev() {
+    if (!(*invIt)->reloading) {
+        if (invIt == inventory.begin()) invIt = inventory.end();
+        invIt--;
+    }
 }

@@ -56,7 +56,7 @@ class Entity {
         virtual std::string getInfo() const;
         virtual std::string getEntity() const;
         virtual std::string getShape() const;
-        void damageEntity(float amount);
+        virtual void damageEntity(float amount);
 
         Entity *collided;
         float currTime;

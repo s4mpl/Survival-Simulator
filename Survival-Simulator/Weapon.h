@@ -34,7 +34,6 @@ class Weapon {
         float attackTime;
         float reloadSpeed;
         float reloadTime;
-        bool reloading;
 
         sf::Vector2f barrelPos;
         float userRadius;
@@ -62,6 +61,7 @@ class Weapon {
         virtual void reload();
         virtual std::string getInfo() const;
 
+        bool reloading;
         sf::Sound reloadSound;
         sf::Sound defaultSound;
         sf::Sound emptyGunSound;

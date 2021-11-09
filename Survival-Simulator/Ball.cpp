@@ -1,7 +1,7 @@
 #include "Ball.h"
 #include "Player.h"
 #include "Utils.h"
-#include <typeinfo>
+#include "Line.h"
 
 const float xMax = gameWidth;
 const float xMin = 0;
@@ -22,7 +22,8 @@ Ball::Ball(int id, float xPos, float yPos, float xVel, float yVel, float xAcc, f
 
 void Ball::update(std::set<Entity *> *closeEntities) {
     float overlap, mag, otherMag, colTime;
-    sf::Vector2f p1Old, p2Old, p1New, p2New, p1Col, p2Col, v1Old, v2Old, v1New, v2New;
+    sf::Vector2f p1Old, p2Old, p1New, p2New, p1Col, p2Col, v1Old, v2Old, v1New, v2New, p1, p2, p3, p4;
+    sf::Vector2f *out = new sf::Vector2f();
     collided = NULL;
 
     // Get delta time
@@ -131,6 +132,16 @@ void Ball::update(std::set<Entity *> *closeEntities) {
                 closeEntities->erase(other); // Should make closeEntities a member variable and remove "collided"
             }
         }
+        else if (getShape() == "circle" && (*other)->getShape() == "line") {
+            Line *l = (Line *)(*other);
+            p3 = l->getPos1();
+            p4 = l->getPos2();
+
+            if (LineCollision(pos, pos + vel * dt, p3, p4, out)) {
+                float lRotAngle = l->getRotationAngle();
+                pos = *out;
+            }
+        }
     }
 
     // Continuous border collision detection
@@ -186,7 +197,7 @@ void Ball::update(std::set<Entity *> *closeEntities) {
 
     // Add trail to ball
     sf::CircleShape *trailCirc = new sf::CircleShape(radius);
-    trailCirc->setFillColor(sf::Color(color.r, color.g, color.b, 255));
+    trailCirc->setFillColor(sf::Color(color.r, color.g, color.b, 50));
     trailCirc->setOrigin(radius, radius);
     trailCirc->setPosition(pos);
     if (trail.size() < 20) {

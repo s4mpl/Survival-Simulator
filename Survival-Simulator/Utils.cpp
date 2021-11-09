@@ -2,7 +2,7 @@
 
 // Returns the magnitude of the given 2-D vector
 float magnitude(sf::Vector2f v) {
-	return sqrt(pow(v.x, 2) + pow(v.y, 2));
+	return sqrt(v.x * v.x + v.y * v.y);
 }
 
 // Returns the distance between two points
@@ -43,17 +43,17 @@ bool LineCollision(const sf::Vector2f& A1, const sf::Vector2f& A2, const sf::Vec
 
     if (f < 0)
     {
-        if (aa > 0)     return false;
-        if (bb > 0)     return false;
-        if (aa < f)     return false;
-        if (bb < f)     return false;
+        if (aa > 0) return false;
+        if (bb > 0) return false;
+        if (aa < f) return false;
+        if (bb < f) return false;
     }
     else
     {
-        if (aa < 0)     return false;
-        if (bb < 0)     return false;
-        if (aa > f)     return false;
-        if (bb > f)     return false;
+        if (aa < 0) return false;
+        if (bb < 0) return false;
+        if (aa > f) return false;
+        if (bb > f) return false;
     }
 
     if (out) { *out = b * (1.0f - (aa / f)) + B1; } // assigns the point of intersection

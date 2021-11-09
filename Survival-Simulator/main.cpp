@@ -5,6 +5,7 @@
 #include <list>
 #include "Ball.h"
 #include "Player.h"
+#include "Line.h"
 
 int GLOBAL_ID_COUNT = 0;
 // Define some constants
@@ -24,7 +25,7 @@ int main() {
     bool paused = false;
 
     // Create the window of the application
-    sf::RenderWindow window(sf::VideoMode(gameWidth, gameHeight, 32), "Physics Test",
+    sf::RenderWindow window(sf::VideoMode(gameWidth, gameHeight, 32), "Survival Simulator",
                             sf::Style::None);
     window.setVerticalSyncEnabled(true);
     sf::Cursor cursor;
@@ -50,6 +51,14 @@ int main() {
         entities.push_back(new Ball(i-1, 45 * ((i % 20) + 1), 45 * ((i / 6) + 1), 200, 200, 0, gravityAccel, 10, clock, 1, sf::Color::Cyan));
         GLOBAL_ID_COUNT++;
     }*/
+    entities.push_back(new Ball(0, 200, 200, 0, 0, 0, gravityAccel, 10, clock, 1, sf::Color::Cyan));
+    entities.push_back(new Ball(1, 400, 200, 0, 0, 0, gravityAccel, 10, clock, 1, sf::Color::Cyan));
+    entities.push_back(new Ball(2, 600, 200, 0, 0, 0, gravityAccel, 10, clock, 1, sf::Color::Cyan));
+    GLOBAL_ID_COUNT++;
+    GLOBAL_ID_COUNT++;
+    GLOBAL_ID_COUNT++;
+    entities.push_back(new Line(3, clock, sf::Vector2f{ 500, 200 }, sf::Vector2f{ 700, 200 }));
+    GLOBAL_ID_COUNT++;
 
     Player *player = new Player(-1, clock);
     entities.push_back(player);
@@ -79,10 +88,11 @@ int main() {
                 paused = !paused;
                 //player->damageEntity(-100);
             }
-            /* Alt-fire on right-click without auto-click
-            if ((event.type == sf::Event::MouseButtonPressed) && (event.mouseButton.button == sf::Mouse::Right)) {
-                player->getWeapon()->altfire(&entities);
-            }*/
+            // Access inventory
+            if (event.type == sf::Event::MouseWheelScrolled) {
+                if(event.mouseWheelScroll.delta > 0) player->inventoryNext();
+                else player->inventoryPrev();
+            }
         }
         // Q to quit while paused
         if (paused) {

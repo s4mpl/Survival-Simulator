@@ -21,8 +21,9 @@ SmartBullet::SmartBullet(int id, sf::Vector2f spawnPos, sf::Vector2f targetDir, 
 
     if (!sonarSoundBuffer.loadFromFile("resources/smartbullet.wav")) exit(-1);
     sonarSound.setBuffer(sonarSoundBuffer);
-    sonarSound.setVolume(10);
-    soundTimer = 4.2f;
+    sonarSound.setVolume(1);
+    sonarSound.setPitch(2);
+    soundTimer = 0;
 }
 
 void SmartBullet::update(std::set<Entity*>* closeEntities) {
@@ -36,15 +37,22 @@ void SmartBullet::update(std::set<Entity*>* closeEntities) {
     dt = currTime - lastTime;
 
     soundTimer += dt;
-    if (soundTimer >= 5.0f) {
+    if (soundTimer >= 0.25f) {
         sonarSound.play();
         soundTimer = 0;
     }
 
+    /* Update acceleration (tracking mouse position)
+    mousePos = sf::Mouse::getPosition(*window);
+    acc = unit(sf::Vector2f{ mousePos.x - pos.x, mousePos.y - pos.y }) * 500.0f;*/
+
     // Update velocity
     mousePos = sf::Mouse::getPosition(*window);
-    vel = sf::Vector2f{ mousePos.x - pos.x, mousePos.y - pos.y } * 2.5f;
-    if (((upgrades >> 4) & 1) == 1) vel *= 2.0f;
+    vel = sf::Vector2f{ mousePos.x - pos.x, mousePos.y - pos.y } * 2.0f;
+    if (((upgrades >> 4) & 1) == 1) vel *= 2.5f;
+
+    vel.x += acc.x * dt;
+    vel.y += acc.y * dt;
 
     // Terminal velocity
     if (vel.x > vMax) vel.x = vMax;
@@ -202,15 +210,15 @@ void SmartBullet::draw(sf::RenderWindow& window) {
     Bullet::draw(window);
 
     // Laser
-    if (((upgrades >> 1) & 1) == 1) {
-        // Draw tracking line from bullet to cursor
-        sf::Vertex line[] =
-        {
-            sf::Vertex(pos, sf::Color(color.r, color.g, color.b, 100)),
-            sf::Vertex(sf::Vector2f{ (float)mousePos.x, (float)mousePos.y }, sf::Color::Transparent)
-        };
-        window.draw(line, 2, sf::Lines);
-    }
+    //if (((upgrades >> 1) & 1) == 1) {
+    // Draw tracking line from bullet to cursor
+    sf::Vertex line[] =
+    {
+        sf::Vertex(pos, sf::Color(color.r, color.g, color.b, 100)),
+        sf::Vertex(sf::Vector2f{ (float)mousePos.x, (float)mousePos.y }, sf::Color::Transparent)
+    };
+    window.draw(line, 2, sf::Lines);
+    //}
 }
 
 std::string SmartBullet::getEntity() const {
